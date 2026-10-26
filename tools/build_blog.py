@@ -19,12 +19,15 @@ def load_json_articles():
     return out
 
 
-ARTICLES = A1 + A2 + load_json_articles()
+_J = load_json_articles()
+for _a in _J:
+    _a['_json'] = 1
+ARTICLES = A1 + A2 + _J
 _slugs = [a['slug'] for a in ARTICLES]
 if len(_slugs) != len(set(_slugs)):
     raise SystemExit('Trùng slug: ' + str([x for x in _slugs if _slugs.count(x) > 1]))
 # mới nhất lên trước; cùng ngày giữ thứ tự gốc
-ARTICLES = [a for _, a in sorted(enumerate(ARTICLES), key=lambda t: (t[1].get('updated', t[1]['date']), -t[0]), reverse=True)]
+ARTICLES = [a for _, a in sorted(enumerate(ARTICLES), key=lambda t: (t[1].get('updated', t[1]['date']), t[1].get('_json', 0), -t[0]), reverse=True)]
 
 SITE = 'https://thuviennguoilaodong.com'
 OUT = os.path.join(ROOT, 'site')
