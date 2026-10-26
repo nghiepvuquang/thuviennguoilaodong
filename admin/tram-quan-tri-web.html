@@ -1,4 +1,4 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><title>Trạm Quản Trị Web</title>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}</style></head><body><title>Trạm Quản Trị Web</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
@@ -179,12 +179,50 @@ td.t{white-space:nowrap}
 .sug .x{flex:1;min-width:0}
 .sug .why{display:block;font-size:.8rem;color:var(--ink-3)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* tabs & detail */
+section.view{display:none;margin-top:22px}
+section.view.on{display:block}
+.nav a.on{background:var(--ink);color:var(--bg)}
+.slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:14px}
+.scard{padding:16px 18px;display:grid;gap:14px;cursor:pointer;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:12px;font:inherit;color:inherit;width:100%;transition:border-color .15s,transform .15s}
+.scard:hover{border-color:var(--accent);transform:translateY(-1px)}
+.scard .row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.scard h3{font-size:1.05rem;font-weight:800}
+.scard .dom{font-family:var(--f-mono);font-size:.82rem;color:var(--ink-2)}
+.scard .meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;border-top:1px dashed var(--line);padding-top:12px}
+.scard .meta .k{font-size:.7rem;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.scard .meta .v{font-weight:700;font-size:.88rem;overflow-wrap:anywhere}
+.scard .go{font-weight:700;color:var(--accent);font-size:.86rem}
+.scard.add{border-style:dashed;place-content:center;text-align:center;color:var(--ink-2);min-height:150px}
+.back{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.88rem;color:var(--ink-2);text-decoration:none;background:none;border:none;cursor:pointer;padding:0;margin-bottom:12px}
+.back:hover{color:var(--accent)}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-top:14px}
+@media(max-width:900px){.dgrid{grid-template-columns:minmax(0,1fr)}}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.phead h3{font-size:.95rem;font-weight:800}
+.pbody{padding:14px 16px;display:grid;gap:12px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media(max-width:480px){.tiles{grid-template-columns:minmax(0,1fr)}}
+.tile{background:var(--panel-2);border-radius:10px;padding:10px 12px;min-width:0}
+.tile .k{font-size:.72rem;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.tile .v{font-size:1.3rem;font-weight:800;font-family:var(--f-mono)}
+.tile .s{font-size:.76rem;color:var(--ink-3)}
+.chartbox{border:1px dashed var(--line-2);border-radius:10px;padding:14px;display:grid;gap:10px}
+.chartbox svg{width:100%;height:auto;display:block}
+.chartbox p{margin:0;color:var(--ink-2);font-size:.86rem}
+.mini{list-style:none;margin:0;padding:0}
+.mini li{padding:8px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:baseline}
+.mini li:last-child{border-bottom:none}
+.mini .d{font-family:var(--f-mono);font-size:.78rem;color:var(--ink-3);white-space:nowrap}
+.mini a{color:var(--ink);text-decoration:none;font-weight:600}
+.mini a:hover{color:var(--accent);text-decoration:underline}
+.cal.compact .day{min-height:74px}
 </style>
 
 <header class="top"><div class="top-in">
   <div class="logo"><div class="logo-mark">QT</div>Trạm Quản Trị Web</div>
   <nav class="nav" aria-label="Mục">
-    <a href="#tro-ly">Trợ lý</a><a href="#web">Web</a><a href="#lich">Lịch đăng</a><a href="#chu-de">Chủ đề</a><a href="#bai-viet">Bài viết</a><a href="#tac-vu">Tác vụ</a><a href="#them-web">Thêm web</a>
+    <a href="#web" data-view="web">Web</a><a href="#lich" data-view="lich">Lịch đăng</a><a href="#chu-de" data-view="chu-de">Chủ đề</a><a href="#bai-viet" data-view="bai-viet">Bài viết</a><a href="#tac-vu" data-view="tac-vu">Tác vụ</a><a href="#tro-ly" data-view="tro-ly">Trợ lý Claude</a><a href="#them-web" data-view="them-web">Thêm web</a>
   </nav>
   <div class="who" id="who"><span class="pill p-off">Đang kiểm tra đăng nhập…</span></div>
 </div></header>
@@ -200,7 +238,7 @@ td.t{white-space:nowrap}
       <div class="cell"><div class="k">Bài đã đăng</div><div class="v mono" id="st-posts">–</div><div class="s" id="st-posts-s">&nbsp;</div></div>
     </div>
 
-    <section id="tro-ly">
+    <section id="tro-ly" class="view">
       <div class="sh"><div><h2>Trợ lý Claude</h2><p>Hỏi về tình hình các web, nhờ gợi ý chủ đề, hoặc ra lệnh như “tạm dừng web X”, “đổi lịch sang thứ 3 và thứ 7 lúc 6 giờ”, “viết ngay bài về nghỉ thai sản”. Claude chỉ thực hiện thao tác sau khi bạn bấm đồng ý.</p></div>
       <button class="btn ghost" id="ai-clear">Xóa cuộc trò chuyện</button></div>
       <div class="panel ai">
@@ -215,18 +253,20 @@ td.t{white-space:nowrap}
       </div>
     </section>
 
-    <section id="web">
-      <div class="sh"><div><h2>Web đang quản lý</h2><p>Bật hoặc tắt viết bài tự động, đổi lịch, viết bài ngay và mở nhanh các trang quản trị của từng web.</p></div>
-      <button class="btn" id="reload">↻ Tải lại trạng thái</button></div>
-      <div class="sites" id="sites"><div class="panel empty">Đang tải danh sách web…</div></div>
+    <section id="web" class="view">
+      <div class="sh"><div><h2>Web đang quản lý</h2><p>Bấm vào một web để xem lịch đăng, trạng thái, lượt truy cập và điều khiển viết bài tự động.</p></div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="hint" id="upd"></span><button class="btn" id="reload">↻ Tải lại</button></div></div>
+      <div class="slist" id="sites"><div class="panel empty">Đang tải danh sách web…</div></div>
     </section>
 
-    <section id="lich">
-      <div class="sh"><div><h2>Lịch đăng 14 ngày tới</h2><p>Tính từ lịch của các tác vụ viết bài. Lịch đã tạm dừng hiện gạch ngang.</p></div></div>
+    <section id="chi-tiet" class="view"></section>
+
+    <section id="lich" class="view">
+      <div class="sh"><div><h2>Lịch đăng 14 ngày tới</h2><p>Tất cả web, tính từ lịch của các tác vụ viết bài. Lịch đã tạm dừng hiện gạch ngang. Bấm vào một lịch để mở trang của web đó.</p></div></div>
       <div class="cal" id="cal"></div>
     </section>
 
-    <section id="chu-de">
+    <section id="chu-de" class="view">
       <div class="sh"><div><h2>Hàng chờ chủ đề</h2><p>Chủ đề thêm ở đây được ưu tiên viết trước danh sách chủ đề có sẵn trong kho. Bạn cũng có thể bấm “Viết ngay” để giao chủ đề cho Claude viết luôn.</p></div></div>
       <div class="topics">
         <div class="panel"><div class="sh" style="padding:12px 14px 0;margin:0"><h3 style="font-size:.95rem">Chờ viết</h3></div><ul class="tlist" id="t-wait"></ul>
@@ -238,18 +278,18 @@ td.t{white-space:nowrap}
       </div>
     </section>
 
-    <section id="bai-viet">
+    <section id="bai-viet" class="view">
       <div class="sh"><div><h2>Bài viết đã đăng</h2><p>Bài do tác vụ tự động viết được ghi vào đây sau mỗi lần chạy.</p></div>
       <select id="p-filter" class="btn" aria-label="Lọc theo web"><option value="">Tất cả web</option></select></div>
       <div class="panel tbl"><table><thead><tr><th>Ngày</th><th>Bài viết</th><th>Web</th><th>Nguồn</th></tr></thead><tbody id="posts"><tr><td colspan="4" class="empty">Đang tải…</td></tr></tbody></table></div>
     </section>
 
-    <section id="tac-vu">
+    <section id="tac-vu" class="view">
       <div class="sh"><div><h2>Tất cả tác vụ theo lịch</h2><p>Mọi tác vụ theo lịch trong tài khoản Claude của bạn, kể cả tác vụ chưa gắn với web nào.</p></div></div>
       <div class="panel tbl"><table><thead><tr><th>Tác vụ</th><th>Lịch</th><th>Lần tới</th><th>Lần gần nhất</th><th>Bật/tắt</th></tr></thead><tbody id="tasks"><tr><td colspan="5" class="empty">Đang tải…</td></tr></tbody></table></div>
     </section>
 
-    <section id="them-web">
+    <section id="them-web" class="view">
       <div class="sh"><div><h2>Thêm web quản lý</h2><p>Mỗi web cần có kho GitHub đã nối với Netlify và tệp hướng dẫn CLAUDE.md giống web Thư Viện Người Lao Động. Nếu chưa có, hãy nhắn Claude để được thiết lập.</p></div></div>
       <form class="panel form" id="add-form" autocomplete="off">
         <label>Tên web<input type="text" id="f-name" required placeholder="Ví dụ: Thư Viện Kế Toán"></label>
@@ -257,6 +297,7 @@ td.t{white-space:nowrap}
         <label>Kho GitHub <small>(chủ/kho)</small><input type="text" id="f-repo" placeholder="nghiepvuquang/ten-kho"></label>
         <label>Trang dự án Netlify <small>(tùy chọn)</small><input type="text" id="f-netlify" placeholder="https://app.netlify.com/projects/…"></label>
         <label>Mã Google Analytics <small>(tùy chọn)</small><input type="text" id="f-ga" placeholder="G-XXXXXXXXXX"></label>
+        <label>Số thuộc tính Google Analytics <small>(tùy chọn, dãy số sau chữ “p” trên link Analytics)</small><input type="text" id="f-gap" placeholder="560756835" inputmode="numeric"></label>
         <label>Tác vụ viết bài
           <select id="f-mode"><option value="none">Chưa gắn tác vụ</option><option value="new">Tạo tác vụ mới theo lịch bên dưới</option></select>
         </label>
@@ -325,7 +366,7 @@ async function call(tool, input){ if(!mcp) throw {code:'capability_disabled'}; c
 async function loadTriggers(){ $('reload').disabled=true;
   try{ const p=await call('list_triggers',{limit:100}); S.triggers=(p&&p.data)||[]; S.trigErr=null; }
   catch(e){ S.trigErr=e; if(['needs_reauth','server_not_connected','not_in_manifest','blocked_by_policy','not_granted'].includes(e.code)) S.triggers=null; }
-  $('reload').disabled=false; renderAll(); }
+  $('reload').disabled=false; S.updated=new Date(); const u=$('upd'); if(u) u.textContent='Cập nhật '+new Intl.DateTimeFormat('vi-VN',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:false}).format(S.updated)+' · tự làm mới mỗi 5 phút'; renderAll(); }
 
 /* ---------- render ---------- */
 function renderBanners(){ const b=[];
@@ -349,11 +390,9 @@ function siteLinks(s){ const L=[]; const d=s.domain;
   if(s.repo) L.push([`https://github.com/${s.repo}`,'GitHub']);
   if(s.netlify) L.push([s.netlify,'Netlify']);
   L.push([`https://search.google.com/search-console?resource_id=sc-domain:${d}`,'Search Console']);
-  if(s.ga) L.push(['https://analytics.google.com/','Analytics']);
+  if(s.ga||s.gaProperty) L.push([s.gaProperty?`https://analytics.google.com/analytics/web/#/p${s.gaProperty}/realtime/overview`:'https://analytics.google.com/','Analytics']);
   return L.map(([h,t])=>`<a class="btn sm" href="${esc(h)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join(''); }
-function renderSites(){ const box=$('sites');
-  if(!S.sites.length){ box.innerHTML=`<div class="panel empty">Chưa có web nào. Thêm web đầu tiên ở mục <a href="#them-web">Thêm web</a>.</div>`; return; }
-  box.innerHTML=S.sites.map(s=>{
+function siteCard(s){ {
     const ts=(s.triggerIds||[]).map(trig).filter(Boolean); const t=ts[0];
     const known=S.triggers!==null; const anyOn=ts.some(x=>x.enabled);
     const status=!(s.triggerIds||[]).length?'<span class="pill p-off">Chưa gắn tác vụ</span>':!known?'<span class="pill p-off">Chưa rõ</span>':!t?'<span class="pill p-bad">Không tìm thấy tác vụ</span>':anyOn?'<span class="pill p-run">Đang tự động</span>':'<span class="pill p-pause">Tạm dừng</span>';
@@ -381,18 +420,68 @@ function renderSites(){ const box=$('sites');
       <form class="inline-form" data-form="topic"><input type="text" name="topic" placeholder="Chủ đề muốn viết ngay, ví dụ: Nghỉ việc riêng có lương" aria-label="Chủ đề"><button class="btn pri sm" type="submit">Giao cho Claude viết</button><button class="btn sm ghost" type="button" data-close>Đóng</button></form>
       <form class="inline-form" data-form="sched"><div class="days">${DAYN.map((n,i)=>`<label><input type="checkbox" name="d" value="${i}" ${p&&p.days&&p.days.includes(i)?'checked':''}>${n}</label>`).join('')}</div><input type="time" name="time" value="${p&&p.hour!==undefined?String(p.hour).padStart(2,'0')+':'+String(p.min).padStart(2,'0'):'05:52'}" aria-label="Giờ"><button class="btn pri sm" type="submit">Lưu lịch</button><button class="btn sm ghost" type="button" data-close>Đóng</button></form>
       <form class="inline-form" data-form="link"><select name="tid" aria-label="Tác vụ" style="border:1px solid var(--line-2);border-radius:7px;padding:6px 10px;background:var(--panel);flex:1 1 260px;min-width:0"><option value="">— Bỏ gắn tác vụ —</option>${(S.triggers||[]).filter(x=>x.cron_expression).map(x=>`<option value="${esc(x.id)}" ${(s.triggerIds||[]).includes(x.id)?'selected':''}>${esc(x.name)}</option>`).join('')}</select><button class="btn pri sm" type="submit">Lưu</button><button class="btn sm ghost" type="button" data-close>Đóng</button></form>
-    </article>`; }).join('');
+    </article>`; }
 }
-function renderCalendar(){ const box=$('cal'); const now=new Date(); const ev={};
-  const tasks=(S.triggers||[]).filter(t=>t.cron_expression);
+function siteStatus(s){ const ts=(s.triggerIds||[]).map(trig).filter(Boolean); const t=ts[0];
+  if(!(s.triggerIds||[]).length) return ['p-off','Chưa gắn tác vụ']; if(S.triggers===null) return ['p-off','Chưa rõ']; if(!t) return ['p-bad','Không tìm thấy tác vụ'];
+  return ts.some(x=>x.enabled)?['p-run','Đang tự động']:['p-pause','Tạm dừng']; }
+function renderSites(){ const box=$('sites');
+  const add=`<button class="scard add" data-goto="them-web"><span style="font-size:1.6rem">＋</span><b>Thêm web mới</b><span class="hint">Quản lý thêm một web khác</span></button>`;
+  if(!S.sites.length){ box.innerHTML=add; return; }
+  box.innerHTML=S.sites.map(s=>{ const t=trig((s.triggerIds||[])[0]); const [cls,txt]=siteStatus(s); const posts=S.posts.filter(p=>p.siteId===s.id);
+    return `<button class="scard" data-open="${esc(s.id)}"><div class="row"><div><h3>${esc(s.name)}</h3><div class="dom">${esc(s.domain)}</div></div><span class="pill ${cls}">${txt}</span></div>
+      <div class="meta"><div><div class="k">Lịch</div><div class="v">${t?esc(cronText(t.cron_expression)):'–'}</div></div><div><div class="k">Lần tới</div><div class="v mono">${t&&t.enabled?fmtVN(t.next_run_at):'–'}</div></div><div><div class="k">Bài đã đăng</div><div class="v mono">${posts.length}</div></div></div>
+      <span class="go">Xem lịch đăng, trạng thái & truy cập ›</span></button>`; }).join('')+add; }
+function weeklyChart(siteId){ const W=8, now=new Date(); const start=new Date(now.getTime()-((W*7)-1)*864e5); const buckets=Array(W).fill(0); const labels=[];
+  for(let i=0;i<W;i++){ const d=new Date(start.getTime()+i*7*864e5); const v=vnParts(d); labels.push(`${v.day}/${v.month}`); }
+  S.posts.filter(p=>p.siteId===siteId&&p.date).forEach(p=>{ const d=new Date(p.date+'T12:00:00+07:00'); const i=Math.floor((d-start)/(7*864e5)); if(i>=0&&i<W) buckets[i]++; });
+  const max=Math.max(4,...buckets), top=Math.ceil(max/2)*2, w=520,h=190,l=30,b=28,tp=12, cw=(w-l-8)/W;
+  const y=v=>tp+(h-tp-b)*(1-v/top); let g='';
+  for(let v=0;v<=top;v+=top/2){ g+=`<line x1="${l}" x2="${w-4}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--ink-3)" font-family="var(--f-mono)">${v}</text>`; }
+  buckets.forEach((v,i)=>{ const x=l+i*cw+cw*.18, bw=cw*.64; const last=i===W-1;
+    g+=`<rect x="${x}" y="${y(v)}" width="${bw}" height="${Math.max(0,h-b-y(v))}" rx="3" fill="${last?'var(--accent)':'var(--line-2)'}"><title>Tuần từ ${labels[i]}: ${v} bài</title></rect>`;
+    if(v) g+=`<text x="${x+bw/2}" y="${y(v)-5}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)" font-family="var(--f-mono)">${v}</text>`;
+    g+=`<text x="${x+bw/2}" y="${h-9}" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">${labels[i]}</text>`; });
+  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Số bài đăng mỗi tuần, 8 tuần gần nhất">${g}</svg>`; }
+function gaLinks(s){ const pid=s.gaProperty; const base='https://analytics.google.com/analytics/web/'+(pid?`#/p${pid}/`:'');
+  return `<a class="btn sm pri" href="${esc(pid?base+'realtime/overview':base)}" target="_blank" rel="noopener">Xem thời gian thực trên Google Analytics ↗</a><a class="btn sm" href="${esc(pid?base+'reports/intelligenthome':base)}" target="_blank" rel="noopener">Báo cáo truy cập ↗</a>`; }
+function renderDetail(){ const box=$('chi-tiet'); const s=S.sites.find(x=>x.id===S.site);
+  if(!s){ box.innerHTML=`<button class="back" data-goto="web">← Tất cả web</button><div class="panel empty">${S.sites.length?'Không tìm thấy web này.':'Đang tải…'}</div>`; return; }
+  const posts=S.posts.filter(p=>p.siteId===s.id); const wait=S.topics.filter(t=>t.siteId===s.id&&t.status==='cho');
+  const keep=[...box.querySelectorAll('.inline-form.on')].map(f=>f.dataset.form);
+  box.innerHTML=`<button class="back" data-goto="web">← Tất cả web</button>
+    ${siteCard(s)}
+    <div class="sh" style="margin-top:22px"><div><h2 style="font-size:1.02rem">Lịch đăng 14 ngày tới</h2><p>Mỗi ô là một lần Claude tự viết bài cho ${esc(s.domain)}.</p></div></div>
+    <div class="cal compact" id="d-cal"></div>
+    <div class="dgrid">
+      <div class="panel"><div class="phead"><h3>Lượt truy cập</h3><span class="pill p-pause">Chưa kết nối nguồn số liệu</span></div>
+        <div class="pbody">
+          <div class="tiles"><div class="tile"><div class="k">Đang online</div><div class="v">–</div><div class="s">người trong 30 phút</div></div><div class="tile"><div class="k">Lượt xem hôm nay</div><div class="v">–</div><div class="s">trang được xem</div></div><div class="tile"><div class="k">Thời gian xem TB</div><div class="v">–</div><div class="s">mỗi người</div></div></div>
+          <div class="chartbox"><p><b>Biểu đồ truy cập thời gian thực</b> sẽ hiện ở đây, tự làm mới mỗi 5 phút, khi app đọc được số liệu Google Analytics của web. Hiện Claude chưa có kết nối Google Analytics trực tiếp nên app chưa lấy được con số.</p>
+          <p>Trong lúc chờ, bấm nút dưới để xem số người đang online và lượt truy cập ngay trên Google Analytics.</p>
+          <div class="links">${gaLinks(s)}</div></div>
+          <p class="hint">Mã đo lường: <span class="mono">${esc(s.ga||'chưa nhập')}</span>${s.gaProperty?` · Thuộc tính: <span class="mono">${esc(s.gaProperty)}</span>`:''}</p>
+        </div></div>
+      <div class="panel"><div class="phead"><h3>Bài đăng 8 tuần qua</h3><span class="hint mono">${posts.length} bài</span></div>
+        <div class="pbody"><div class="chartbox" style="border-style:solid">${weeklyChart(s.id)}</div>
+          <ul class="mini">${posts.slice(0,6).map(p=>`<li><span class="d">${fmtDate(p.date)}</span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></li>`).join('')||'<li class="muted">Chưa có bài.</li>'}</ul>
+          <button class="btn sm" data-goto="bai-viet" data-filter="${esc(s.id)}">Xem tất cả bài của web này ›</button></div></div>
+    </div>
+    <div class="panel" style="margin-top:14px"><div class="phead"><h3>Hàng chờ chủ đề của web</h3><button class="btn sm" data-goto="chu-de">Quản lý chủ đề ›</button></div>
+      <ul class="tlist">${wait.map((t,i)=>`<li><span class="n">${i+1}</span><span class="x">${esc(t.text)}</span></li>`).join('')||'<li class="muted">Không có chủ đề chờ. Tác vụ sẽ lấy chủ đề từ danh sách có sẵn trong kho.</li>'}</ul></div>`;
+  keep.forEach(n=>{ const f=box.querySelector(`[data-form="${n}"]`); if(f) f.classList.add('on'); });
+  renderCalendar('d-cal', s.id); }
+function renderCalendar(boxId='cal', onlySite=null){ const box=$(boxId); if(!box) return; const now=new Date(); const ev={};
+  const only=onlySite?(S.sites.find(x=>x.id===onlySite)||{}).triggerIds||[]:null;
+  const tasks=(S.triggers||[]).filter(t=>t.cron_expression&&(!only||only.includes(t.id)));
   const nameFor=t=>{ const s=S.sites.find(x=>(x.triggerIds||[]).includes(t.id)); return s?s.domain:t.name; };
   for(let i=0;i<14;i++){ const d=new Date(now.getTime()+i*864e5); const vp=vnParts(d); const key=`${vp.year}-${vp.month}-${vp.day}`; ev[key]={wd:WK[vp.weekday], d:vp, items:[]}; }
   tasks.forEach(t=>{ const p=parseCron(t.cron_expression); if(!p||!p.days||p.tz!==TZ) return;
     Object.entries(ev).forEach(([k,o])=>{ if(!p.days.includes(o.wd)) return; const hm=`${String(p.hour).padStart(2,'0')}:${String(p.min).padStart(2,'0')}`;
       const isToday=k===Object.keys(ev)[0]; const nowP=vnParts(now); if(isToday && (`${nowP.hour}:${nowP.minute}` > hm)) return;
-      o.items.push({hm, name:nameFor(t), on:t.enabled}); }); });
+      const st=S.sites.find(x=>(x.triggerIds||[]).includes(t.id)); o.items.push({hm, name:onlySite?'Viết 1 bài mới':nameFor(t), on:t.enabled, site:st?st.id:''}); }); });
   const keys=Object.keys(ev);
-  box.innerHTML=keys.map((k,i)=>{ const o=ev[k]; return `<div class="day ${i===0?'today':''}"><div class="d">${DAYL[o.wd]} · ${o.d.day}/${o.d.month}${i===0?' · hôm nay':''}</div>${o.items.sort((a,b)=>a.hm.localeCompare(b.hm)).map(x=>`<div class="ev ${x.on?'':'off'}"><b>${x.hm}</b> ${esc(x.name)}</div>`).join('')}</div>`; }).join('');
+  box.innerHTML=keys.map((k,i)=>{ const o=ev[k]; return `<div class="day ${i===0?'today':''}"><div class="d">${DAYL[o.wd]} · ${o.d.day}/${o.d.month}${i===0?' · hôm nay':''}</div>${o.items.sort((a,b)=>a.hm.localeCompare(b.hm)).map(x=>`<div class="ev ${x.on?'':'off'}" ${x.site&&!onlySite?`data-open="${esc(x.site)}" style="cursor:pointer"`:''}><b>${x.hm}</b> ${esc(x.name)}${x.on?'':' (tạm dừng)'}</div>`).join('')}</div>`; }).join('');
   if(S.triggers===null) box.insertAdjacentHTML('afterbegin','');
 }
 function siteName(id){ const s=S.sites.find(x=>x.id===id); return s?s.domain:'–'; }
@@ -410,7 +499,21 @@ function renderTasks(){ const tb=$('tasks');
   const list=S.triggers.filter(t=>t.cron_expression||t.enabled);
   tb.innerHTML=list.length?list.map(t=>{ const site=S.sites.find(s=>(s.triggerIds||[]).includes(t.id)); const busy=S.busy.has(t.id);
     return `<tr data-tid="${esc(t.id)}"><td><b>${esc(t.name)}</b><br><span class="hint">${site?'Gắn với '+esc(site.domain):'Chưa gắn với web nào'}</span></td><td>${esc(cronText(t.cron_expression))}${t.run_once_at&&!t.cron_expression?'Một lần · '+fmtVN(t.run_once_at):''}</td><td class="t mono">${t.enabled?fmtVN(t.next_run_at):'–'}</td><td class="t">${runPill(t.last_run)}<br><span class="hint mono">${t.last_run?fmtVN(t.last_run.fired_at):''}</span></td><td>${t.cron_expression?`<button class="switch" role="switch" aria-checked="${t.enabled}" data-tact2="toggle" ${busy||!mcp?'disabled':''}><span class="tr"></span>${t.enabled?'Bật':'Tắt'}</button>`:'<span class="hint">—</span>'}</td></tr>`; }).join(''):'<tr><td colspan="5" class="empty">Chưa có tác vụ theo lịch nào.</td></tr>'; }
-function renderAll(){ renderBanners(); renderStrip(); renderSites(); renderCalendar(); renderTopics(); renderPosts(); renderTasks(); }
+function renderAll(){ renderBanners(); renderStrip(); renderSites(); renderCalendar(); renderTopics(); renderPosts(); renderTasks(); if(S.view==='chi-tiet') renderDetail(); }
+/* ---------- tabs ---------- */
+const VIEWS=['web','chi-tiet','lich','chu-de','bai-viet','tac-vu','tro-ly','them-web'];
+function go(view, site, push=true){ if(!VIEWS.includes(view)) view='web'; S.view=view; S.site=site||null;
+  document.querySelectorAll('section.view').forEach(x=>x.classList.toggle('on', x.id===view));
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('on', a.dataset.view===(view==='chi-tiet'?'web':view)));
+  $('strip').hidden = !(view==='web'||view==='tro-ly');
+  if(view==='chi-tiet') renderDetail();
+  if(push){ try{ history.replaceState(null,'','#'+(view==='chi-tiet'?'w-'+site:view)); }catch(_){} }
+  window.scrollTo({top:0}); }
+function routeFromHash(){ const h=(location.hash||'').slice(1); if(h.startsWith('w-')) go('chi-tiet',h.slice(2),false); else go(VIEWS.includes(h)?h:'web',null,false); }
+document.addEventListener('click',ev=>{ const n=ev.target.closest('.nav a[data-view]'); if(n){ ev.preventDefault(); go(n.dataset.view); return; }
+  const o=ev.target.closest('[data-open]'); if(o){ go('chi-tiet',o.dataset.open); return; }
+  const g=ev.target.closest('[data-goto]'); if(g){ if(g.dataset.filter){ $('p-filter').value=g.dataset.filter; } go(g.dataset.goto); if(g.dataset.filter) renderPosts(); return; } });
+window.addEventListener('hashchange', routeFromHash);
 
 /* ---------- actions ---------- */
 async function setEnabled(tid, on, key){ S.busy.add(key); renderAll();
@@ -430,7 +533,7 @@ document.addEventListener('click', async ev => {
     else if(act==='run'&&t){ if(await confirmBox('Viết một bài ngay?',`Claude sẽ viết 1 bài mới theo chủ đề tiếp theo và đăng lên ${s.domain}.`,'Viết ngay')) fireTask(t.id,null,s.id); }
     else if(act==='topic') openForm('topic'); else if(act==='sched') openForm('sched'); else if(act==='link') openForm('link');
     else if(act==='remove'){ if(!(await confirmBox('Gỡ web khỏi danh sách?',`${s.domain} sẽ không còn hiện trong app. Web, kho GitHub và tác vụ theo lịch vẫn giữ nguyên; muốn dừng viết bài hãy tắt công tắc trước.`,'Gỡ'))) return;
-      try{ await db.doc('sites/'+s.id).delete(); toast('Đã gỡ '+s.domain); }catch(e){ toast('Không gỡ được: '+(e.code||'')); } }
+      try{ await db.doc('sites/'+s.id).delete(); toast('Đã gỡ '+s.domain); go('web'); }catch(e){ toast('Không gỡ được: '+(e.code||'')); } }
     return; }
   const c=ev.target.closest('[data-close]'); if(c){ c.closest('.inline-form').classList.remove('on'); return; }
   const ta=ev.target.closest('[data-tact]'); if(ta){ const li=ta.closest('[data-topic]'); const tp=S.topics.find(x=>x.id===li.dataset.topic);
@@ -529,7 +632,7 @@ $('add-form').addEventListener('submit', async ev => { ev.preventDefault(); cons
   if(!name||!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(domain)){ msg.className='msg err'; msg.textContent='Nhập tên web và tên miền hợp lệ, ví dụ vidu.com'; return; }
   if(repo && !/^[\w.-]+\/[\w.-]+$/.test(repo)){ msg.className='msg err'; msg.textContent='Kho GitHub phải có dạng chủ/kho, ví dụ nghiepvuquang/ten-kho'; return; }
   const id=domain.replace(/[^a-z0-9-]/g,'-'); if(S.sites.some(s=>s.id===id)){ msg.className='msg err'; msg.textContent='Web này đã có trong danh sách.'; return; }
-  const doc={name, domain, repo, netlify:$('f-netlify').value.trim(), ga:$('f-ga').value.trim(), triggerIds:[], createdAt:new Date().toISOString()};
+  const doc={name, domain, repo, netlify:$('f-netlify').value.trim(), ga:$('f-ga').value.trim(), gaProperty:$('f-gap').value.replace(/\D/g,''), triggerIds:[], createdAt:new Date().toISOString()};
   if($('f-mode').value==='new'){
     if(!repo){ msg.className='msg err'; msg.textContent='Cần có kho GitHub để tạo tác vụ viết bài.'; return; }
     const days=[...$('f-days').querySelectorAll('input:checked')].map(x=>+x.value); if(!days.length){ msg.className='msg err'; msg.textContent='Chọn ít nhất một ngày viết bài.'; return; }
@@ -538,7 +641,7 @@ $('add-form').addEventListener('submit', async ev => { ev.preventDefault(); cons
       const tid=(p&&p.trigger&&p.trigger.id)||(p&&p.id); if(tid) doc.triggerIds=[tid]; }
     catch(e){ msg.className='msg err'; msg.textContent=mcpErrText(e)+' Web vẫn được thêm; bạn có thể nhắn Claude: “Tạo tác vụ viết bài tự động cho '+domain+'”, rồi dùng nút Gắn tác vụ.'; }
   }
-  try{ await db.doc('sites/'+id).set(doc); if(!msg.textContent||msg.className==='msg info'){ msg.className='msg ok'; msg.textContent='Đã thêm '+domain+'.'; } $('add-form').reset(); $('f-sched').hidden=true; loadTriggers(); }
+  try{ await db.doc('sites/'+id).set(doc); if(!msg.textContent||msg.className==='msg info'){ msg.className='msg ok'; msg.textContent='Đã thêm '+domain+'.'; } $('add-form').reset(); $('f-sched').hidden=true; loadTriggers(); setTimeout(()=>go('chi-tiet',id),600); }
   catch(e){ msg.className='msg err'; msg.textContent='Không lưu được web ('+(e.code||'lỗi')+').'; }
 });
 
@@ -552,6 +655,7 @@ async function boot(){
   if(!owner){ $('main').hidden=true; $('gate').hidden=false; $('who').innerHTML='<span class="pill p-bad">Không có quyền</span>';
     $('gate').innerHTML=`<div class="panel gate"><h1>Khu vực dành cho chủ sở hữu</h1><p>App này chỉ hoạt động khi bạn mở bằng <b>tài khoản Claude đã tạo ra nó</b> và đang đăng nhập claude.ai.</p><p>Nếu bạn là chủ sở hữu, hãy đăng nhập claude.ai rồi mở lại đường link này. Người khác dù có link cũng không xem hay thay đổi được dữ liệu.</p></div>`; return; }
   $('who').innerHTML=`<img src="${esc(me.avatarUrl)}" alt=""><span>${esc(me.name||'Chủ sở hữu')}</span><span class="pill p-run">Đã đăng nhập · chủ sở hữu</span>`;
+  routeFromHash();
   [db, mcp] = await Promise.all([claude.use('db'), claude.use('mcp')]);
   renderAll();
   if(db){
@@ -559,7 +663,7 @@ async function boot(){
     db.collection('posts').orderBy('date','desc').limit(1000).onSnapshot(q=>{ S.posts=q.docs.map(d=>({id:d.id,...d.data()})); renderAll(); }, e=>toast('Lỗi tải bài viết: '+e.code));
     db.collection('topics').limit(500).onSnapshot(q=>{ S.topics=q.docs.map(d=>({id:d.id,...d.data()})); renderTopics(); }, e=>toast('Lỗi tải chủ đề: '+e.code));
   }
-  if(mcp) loadTriggers();
+  if(mcp){ loadTriggers(); setInterval(()=>{ if(!document.hidden) loadTriggers(); }, 300000); }
   sample = await claude.use('sample');
   if(sample){ try{ const lim=await sample.limits(); toolsOK=!!(lim&&lim.tools); }catch(_){ toolsOK=false; } }
   else { $('tro-ly').querySelector('.ai').innerHTML='<div class="empty">Trợ lý Claude chỉ dùng được khi mở app trong claude.ai.</div>'; $('sug-btn').disabled=true; }
