@@ -30,7 +30,10 @@ Nếu phát hiện văn bản mới thay thế các số liệu trên, **không 
 Mỗi lần chạy **viết đúng 1 bài**.
 
 1. `git pull --rebase origin main`.
-2. Mở `TOPICS.md`, lấy chủ đề **đầu tiên** trong "Chờ viết". Kiểm tra chưa có bài trùng nội dung (xem tiêu đề trong `tools/articles*.py` và `content/bai-viet/`).
+2. Chọn chủ đề theo thứ tự ưu tiên:
+   a. Nếu lần chạy được giao một chủ đề cụ thể (tin nhắn thêm từ app quản trị) thì viết chủ đề đó.
+   b. Nếu không, và phiên có công cụ `ArtifactData`: đọc hàng chờ của **app quản trị** — `ArtifactData` action `query`, url `https://claude.ai/artifact/Rvju7EjtWk7zTfZX9mHCvN`, collection `topics`, where `siteId == "thuviennguoilaodong-com"` và `status == "cho"`; lấy chủ đề có `createdAt` sớm nhất. Không có công cụ hoặc hàng chờ rỗng thì bỏ qua bước này.
+   c. Nếu không có chủ đề nào ở trên: mở `TOPICS.md`, lấy chủ đề **đầu tiên** trong "Chờ viết". Kiểm tra chưa có bài trùng nội dung (xem tiêu đề trong `tools/articles*.py` và `content/bai-viet/`).
 3. **Nghiên cứu căn cứ pháp lý**:
    - Ưu tiên nguyên văn trong `tools/law_text.js` (`python3 tools/law.py ...`).
    - Nếu cần điều luật chưa có, tìm nguyên văn từ nguồn chính thống (vbpl.vn, chinhphu.vn, luatvietnam.vn, thuvienphapluat.vn) bằng WebSearch/WebFetch. Chỉ dùng văn bản **đang có hiệu lực**; kiểm tra văn bản đã bị thay thế chưa.
@@ -51,7 +54,11 @@ Mỗi lần chạy **viết đúng 1 bài**.
 6. Tự rà lại trước khi đăng: từng con số đã khớp nguyên văn luật? ngày hiệu lực đúng? ví dụ tính đúng? không mâu thuẫn với 20 bài cũ và trang chủ?
 7. Cập nhật `TOPICS.md`: chuyển chủ đề xuống "Đã viết" dạng `- [x] YYYY-MM-DD – <tiêu đề> (/bai-viet/<slug>/)`. Khi "Chờ viết" còn dưới 5 chủ đề, tự bổ sung 5 chủ đề mới hữu ích cho người lao động (không trùng).
 8. Commit tất cả (`content/`, `site/`, `TOPICS.md`, `tools/law_text.js` nếu có thêm) với thông điệp `Bài mới: <tiêu đề>` rồi `git push origin main`. Netlify tự cập nhật web sau khoảng 1 phút.
-9. Báo cáo cuối (tiếng Việt, ngắn): tiêu đề, đường link `https://thuviennguoilaodong.com/bai-viet/<slug>/`, các căn cứ pháp lý đã đối chiếu, điểm nào còn chưa chắc chắn (nếu có).
+9. Ghi vào app quản trị (chỉ khi phiên có công cụ `ArtifactData`; lỗi ở bước này không ảnh hưởng việc đăng bài):
+   - `set` collection `posts`, doc_id = `<slug>`, data `{"siteId":"thuviennguoilaodong-com","title":<tiêu đề>,"url":"https://thuviennguoilaodong.com/bai-viet/<slug>/","date":<YYYY-MM-DD>,"cat":<cat>,"source":"auto"}`.
+   - Nếu chủ đề lấy từ hàng chờ app (bước 2b) hoặc do app giao (2a, có bản ghi `topics` trạng thái `da-giao` trùng nội dung): `update` bản ghi đó thành `{"status":"da-viet","url":<link bài>,"updatedAt":<ISO time>}` (nhớ truyền `if_version` đã đọc).
+   - Nếu chủ đề bị tạm hoãn vì thiếu căn cứ: `update` thành `{"status":"tam-hoan","note":<lý do>}`.
+10. Báo cáo cuối (tiếng Việt, ngắn): tiêu đề, đường link `https://thuviennguoilaodong.com/bai-viet/<slug>/`, các căn cứ pháp lý đã đối chiếu, điểm nào còn chưa chắc chắn (nếu có).
 
 ## Không được làm
 - Không xóa hay sửa nội dung bài cũ (trừ khi được yêu cầu), không đổi slug bài đã đăng.
