@@ -15,6 +15,8 @@ for p in pages:
     rel = rel if rel == '/' else rel + '/'
     h = open(p, encoding='utf-8').read()
     if GA not in h: errs.append(f'{rel}: thiếu mã Google Analytics')
+    if '/assets/ads.js' not in h: errs.append(f'{rel}: thiếu tệp cấu hình quảng cáo /assets/ads.js')
+    if '/bai-viet/' in rel and rel != '/bai-viet/' and h.count('class="ad-slot"') < 3: errs.append(f'{rel}: thiếu vị trí quảng cáo trong bài')
     if not re.search(r'<title>[^<]{10,}</title>', h): errs.append(f'{rel}: thiếu <title>')
     if p != os.path.join(SITE, 'index.html') and 'name="description"' not in h: errs.append(f'{rel}: thiếu meta description')
     ids = set(re.findall(r'id="([^"]+)"', h))

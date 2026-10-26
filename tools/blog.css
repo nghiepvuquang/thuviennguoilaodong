@@ -115,3 +115,10 @@ footer .ft{max-width:1160px;margin:0 auto;padding-block:20px 32px;display:flex;f
 footer a{color:var(--fg-2);text-decoration:none;margin-right:14px}
 footer a:hover{text-decoration:underline}
 @media print{.site-header,aside,.cta,footer{display:none}.main{display:block}}
+
+/* vị trí quảng cáo (ẩn cho đến khi bật trong /assets/ads.js) */
+.ad-slot{margin:24px 0;text-align:center}
+.ad-slot.on{min-height:100px}
+.ad-lb{display:block;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);margin-bottom:4px}
+aside .ad-slot{margin:0}
+.grid .ad-slot{grid-column:1/-1;margin:0}

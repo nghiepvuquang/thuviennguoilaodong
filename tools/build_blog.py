@@ -63,6 +63,7 @@ def head(title, desc, url, ld, og_type='article'):
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap">
 <link rel="stylesheet" href="/assets/blog.css">
+<script defer src="/assets/ads.js"></script>
 {THEME_JS}
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
 </head>
@@ -92,6 +93,18 @@ def fmt_date(d):
 def read_minutes(body):
     words = len(re.sub('<[^>]+>', ' ', body).split())
     return max(3, round(words / 200))
+
+
+def ad(slot):
+    return f'<div class="ad-slot" data-slot="{slot}" hidden></div>'
+
+
+def mid_ad(body):
+    # chèn quảng cáo giữa bài: trước thẻ <h2> thứ 3 (nếu có)
+    idx = [m.start() for m in re.finditer(r'<h2[ >]', body)]
+    if len(idx) >= 3:
+        return body[:idx[2]] + ad('bai-giua') + '\n' + body[idx[2]:]
+    return body
 
 
 def build_article(a, all_):
@@ -131,10 +144,12 @@ def build_article(a, all_):
   <div class="meta"><span>Cập nhật: <b>{fmt_date(a.get('updated', a['date']))}</b></span><span>Đọc khoảng <b>{read_minutes(a['body'])} phút</b></span><span>Chuyên mục: <b>{cat}</b></span></div>
   <p class="lead">{a['lead']}</p>
   <div class="keys"><h2>Ý chính</h2><ul>{keys}</ul></div>
+  {ad('bai-dau')}
   <nav class="toc" aria-label="Mục lục"><b>Nội dung bài viết</b><ol>{toc}</ol></nav>
   <div class="body">
-{a['body']}
+{mid_ad(a['body'])}
 {faq_html}
+  {ad('bai-cuoi')}
   <section class="law"><h2>Căn cứ pháp lý</h2><ul>{laws}</ul>
   <p class="disc">Bài viết mang tính tham khảo, tổng hợp từ văn bản pháp luật đang có hiệu lực tại thời điểm cập nhật. Trường hợp cụ thể của bạn có thể khác; khi cần chắc chắn, hãy hỏi phòng nhân sự, cơ quan BHXH, cơ quan thuế hoặc luật sư.</p></section>
   </div>
@@ -142,6 +157,7 @@ def build_article(a, all_):
 <aside>
   <div class="side tools"><h3>Công cụ miễn phí</h3><ul><li><a href="/">🧮 Tính lương Gross ↔ Net</a></li><li><a href="/#bhxh">💰 Tính tiền BHXH 1 lần</a></li><li><a href="/#luat">📖 Tra cứu luật lao động</a></li></ul></div>
   <div class="side"><h3>Bài viết liên quan</h3><ul>{rel_html}</ul></div>
+  {ad('bai-ben-phai')}
 </aside>
 </div>
 ''' + FOOT
@@ -163,7 +179,7 @@ def build_list(all_):
                 'Giải thích dễ hiểu về cách tính lương Net, thuế TNCN 5 bậc, lương tối thiểu vùng, BHXH, rút BHXH 1 lần, trợ cấp thất nghiệp, thôi việc, làm thêm giờ và nghỉ phép năm 2026.',
                 url, ld, 'website') + f'''
 <div class="list-head pad"><h1>Bài viết cho người lao động</h1><p>Giải thích dễ hiểu, có ví dụ tính tiền cụ thể, theo luật áp dụng năm 2026. Mỗi bài dẫn tới nguyên văn điều luật để bạn tự kiểm tra.</p></div>
-<div class="grid pad">{cards}</div>
+<div class="grid pad">{cards}{ad('danh-sach')}</div>
 ''' + FOOT
     os.makedirs(os.path.join(OUT, 'bai-viet'), exist_ok=True)
     open(os.path.join(OUT, 'bai-viet', 'index.html'), 'w').write(page)

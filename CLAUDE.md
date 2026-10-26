@@ -16,6 +16,12 @@ Chủ web: Vũ Quang Nghiệp (người Việt, không phải lập trình viên
 - `tools/check.py` – kiểm tra liên kết, mục lục, sitemap, mã GA, JSON-LD. Phải ra "OK".
 - `TOPICS.md` – danh sách chủ đề chờ viết / đã viết / tạm hoãn.
 
+## Vị trí quảng cáo (mục tiêu của web là kiếm thu nhập từ quảng cáo)
+- Các vị trí đã chừa sẵn, đang ẩn: trang chủ `trang-chu-ket-qua`, `trang-chu-cuoi`; mỗi bài viết `bai-dau`, `bai-giua` (trước `<h2>` thứ 3), `bai-cuoi`, `bai-ben-phai`; trang danh sách `danh-sach`. Thẻ dạng `<div class="ad-slot" data-slot="..." hidden></div>`.
+- Bật/tắt và mã quảng cáo nằm DUY NHẤT trong `site/assets/ads.js` (`enabled`, `client`, `slots`). Chỉ sửa tệp này khi chủ web yêu cầu (sau khi AdSense duyệt), kèm tạo `site/ads.txt`.
+- `tools/build_blog.py` tự chèn các vị trí vào mọi bài; `tools/check.py` báo lỗi nếu trang thiếu `/assets/ads.js` hoặc bài thiếu vị trí. Không xóa các vị trí này. Bài mới nên có ít nhất 3 thẻ `<h2>` để có vị trí giữa bài.
+- Trang mới thêm sau này (công cụ, trang chủ đề…) cũng phải chừa vị trí quảng cáo theo cách trên.
+
 ## Số liệu pháp lý chuẩn (năm 2026) – dùng thống nhất
 - Lương tối thiểu vùng (NĐ 293/2025, từ 01/01/2026): I 5.310.000 · II 4.730.000 · III 4.140.000 · IV 3.700.000 đ/tháng; giờ 25.500 / 22.700 / 20.000 / 17.800.
 - Lương cơ sở = mức tham chiếu BHXH: 2.530.000 đ từ 01/7/2026 (NĐ 161/2026); trước đó 2.340.000.
@@ -62,6 +68,6 @@ Mỗi lần chạy **viết đúng 1 bài**.
 
 ## Không được làm
 - Không xóa hay sửa nội dung bài cũ (trừ khi được yêu cầu), không đổi slug bài đã đăng.
-- Không sửa mã Google Analytics (G-QXWRGDZ79R), không thêm mã quảng cáo/AdSense khi chưa được yêu cầu.
+- Không sửa mã Google Analytics (G-QXWRGDZ79R). Không bật quảng cáo, không thêm mã AdSense khi chủ web chưa yêu cầu – nhưng luôn giữ các vị trí quảng cáo đã chừa sẵn.
 - Không push nếu `tools/check.py` còn lỗi.
 - Không đăng quá 1 bài mỗi lần chạy.
