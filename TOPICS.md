@@ -5,7 +5,6 @@ Chủ đề nào không đủ căn cứ pháp luật chắc chắn thì chuyển
 Người dùng có thể thêm chủ đề mới vào đầu danh sách bất cứ lúc nào.
 
 ## Chờ viết
-- [ ] Lương tháng 13, thưởng Tết: có bắt buộc không? (BLLĐ Điều 104) + thuế TNCN với tiền thưởng
 - [ ] Trả lương chậm, nợ lương: quyền của người lao động (BLLĐ Điều 94, 97, 35)
 - [ ] Tiền lương ngừng việc (BLLĐ Điều 99)
 - [ ] Công ty được khấu trừ lương trong trường hợp nào? (BLLĐ Điều 102)
@@ -36,5 +35,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 
 ## Đã viết
 (20 bài đầu viết ngày 26/10/2026 – xem thư mục tools/articles.py và tools/articles2.py)
+- [x] 2026-10-26 – Lương tháng 13, thưởng Tết có bắt buộc không? Thuế TNCN với tiền thưởng (/bai-viet/luong-thang-13-thuong-tet/)
 
 ## Tạm hoãn
