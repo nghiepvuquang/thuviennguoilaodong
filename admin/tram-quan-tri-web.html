@@ -1,0 +1,570 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body><title>Trạm Quản Trị Web</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: control-room console — slim top bar, status strip, then stacked operational panels; dense, scannable, state shown as pills and switches */
+:root{
+  --bg:#f3f4f1; --panel:#ffffff; --panel-2:#f7f8f5; --line:#dfe2db; --line-2:#c9cec3;
+  --ink:#16201c; --ink-2:#4b5751; --ink-3:#7c867f;
+  --accent:#0f7a5c; --accent-ink:#ffffff; --accent-soft:#e0f1ea;
+  --run:#0f7a5c; --run-soft:#e0f1ea; --pause:#8a6a10; --pause-soft:#faf0d2; --bad:#b4372b; --bad-soft:#fbe4e0; --info:#2e5f9e; --info-soft:#e3ecf8;
+  --f-ui:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif; --f-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101614; --panel:#17201d; --panel-2:#1c2723; --line:#28342f; --line-2:#36443e;
+  --ink:#e6ede9; --ink-2:#a9b6af; --ink-3:#77857e;
+  --accent:#3fc59a; --accent-ink:#06261b; --accent-soft:#163a2e;
+  --run:#3fc59a; --run-soft:#163a2e; --pause:#e2bf5c; --pause-soft:#3a3016; --bad:#f08a7e; --bad-soft:#3d1f1b; --info:#8db6ee; --info-soft:#1c2c42;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101614; --panel:#17201d; --panel-2:#1c2723; --line:#28342f; --line-2:#36443e;
+  --ink:#e6ede9; --ink-2:#a9b6af; --ink-3:#77857e;
+  --accent:#3fc59a; --accent-ink:#06261b; --accent-soft:#163a2e;
+  --run:#3fc59a; --run-soft:#163a2e; --pause:#e2bf5c; --pause-soft:#3a3016; --bad:#f08a7e; --bad-soft:#3d1f1b; --info:#8db6ee; --info-soft:#1c2c42;
+  color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:14.5px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+a{color:var(--info)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;text-wrap:balance}
+
+/* top bar */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.05rem;letter-spacing:-.01em}
+.logo-mark{width:30px;height:30px;border-radius:8px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-family:var(--f-mono);font-size:.8rem;font-weight:600}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:6px 11px;border-radius:7px;text-decoration:none;color:var(--ink-2);font-weight:600;font-size:.88rem;white-space:nowrap}
+.nav a:hover{background:var(--panel);color:var(--ink)}
+.who{display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--ink-2)}
+.who img{width:26px;height:26px;border-radius:50%}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:.76rem;font-weight:700;white-space:nowrap;line-height:1.7}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.p-run{background:var(--run-soft);color:var(--run)}.p-pause{background:var(--pause-soft);color:var(--pause)}.p-bad{background:var(--bad-soft);color:var(--bad)}.p-info{background:var(--info-soft);color:var(--info)}.p-off{background:var(--panel-2);color:var(--ink-3)}
+
+/* status strip */
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:20px 0 26px}
+@media(max-width:760px){.strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cell{background:var(--panel);padding:14px 16px;min-width:0}
+.cell .k{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:700}
+.cell .v{font-size:1.5rem;font-weight:800;margin-top:2px;letter-spacing:-.01em}
+#st-next{font-size:1.1rem;line-height:1.35;margin-top:6px}
+.cell .s{font-size:.8rem;color:var(--ink-2);overflow-wrap:anywhere}
+
+/* sections */
+section{margin-top:30px;scroll-margin-top:80px}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.sh h2{font-size:1.15rem;font-weight:800;letter-spacing:-.01em}
+.sh p{margin:2px 0 0;color:var(--ink-2);font-size:.86rem;max-width:68ch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);background:var(--panel);border-radius:8px;padding:7px 12px;font-weight:600;font-size:.86rem;cursor:pointer;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--ink-3)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{filter:brightness(1.05)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--ink-2)}
+.btn.danger{color:var(--bad)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.sm{padding:4px 9px;font-size:.8rem}
+
+/* site cards */
+.sites{display:grid;gap:14px}
+.site{padding:16px 18px;display:grid;gap:14px}
+.site-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.site-h h3{font-size:1.08rem;font-weight:800}
+.site-h .dom{font-family:var(--f-mono);font-size:.84rem;color:var(--ink-2)}
+.kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 18px}
+@media(max-width:760px){.kv{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kv div{min-width:0}
+.kv .k{font-size:.74rem;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.kv .v{font-weight:600;overflow-wrap:anywhere}
+.links{display:flex;gap:6px;flex-wrap:wrap}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px dashed var(--line);padding-top:12px}
+.switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;font-size:.88rem;border:none;background:none;padding:0}
+.switch .tr{width:42px;height:24px;border-radius:12px;background:var(--line-2);position:relative;transition:background .15s}
+.switch .tr::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.switch[aria-checked="true"] .tr{background:var(--run)}
+.switch[aria-checked="true"] .tr::after{transform:translateX(18px)}
+.switch[disabled]{opacity:.5;cursor:wait}
+.inline-form{display:none;gap:8px;flex-wrap:wrap;align-items:center;background:var(--panel-2);border-radius:10px;padding:10px 12px}
+.inline-form.on{display:flex}
+.inline-form input[type=text],.inline-form input[type=time]{border:1px solid var(--line-2);border-radius:7px;padding:6px 10px;background:var(--panel);min-width:0}
+.inline-form input[type=text]{flex:1 1 260px}
+.days{display:flex;gap:4px;flex-wrap:wrap}
+.days label{display:inline-flex;align-items:center;justify-content:center;min-width:38px;padding:5px 8px;border:1px solid var(--line-2);border-radius:7px;cursor:pointer;font-weight:700;font-size:.8rem;background:var(--panel)}
+.days input{position:absolute;opacity:0;pointer-events:none}
+.days label:has(input:checked){background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.msg{font-size:.84rem;padding:8px 12px;border-radius:8px}
+.msg.ok{background:var(--run-soft);color:var(--run)}.msg.err{background:var(--bad-soft);color:var(--bad)}.msg.info{background:var(--info-soft);color:var(--info)}
+
+/* tables */
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);font-weight:700;background:var(--panel-2);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.t{white-space:nowrap}
+.empty{padding:22px 18px;color:var(--ink-2);font-size:.9rem}
+
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+@media(max-width:760px){.cal{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.day{background:var(--panel);padding:10px 10px 12px;min-height:96px;min-width:0}
+.day .d{font-size:.78rem;color:var(--ink-3);font-weight:700}
+.day.today .d{color:var(--accent)}
+.ev{margin-top:6px;border-left:3px solid var(--run);background:var(--run-soft);border-radius:0 6px 6px 0;padding:4px 7px;font-size:.78rem;line-height:1.35;overflow-wrap:anywhere}
+.ev.off{border-color:var(--ink-3);background:var(--panel-2);color:var(--ink-3);text-decoration:line-through}
+.ev b{font-family:var(--f-mono);font-weight:600}
+
+/* topics */
+.topics{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media(max-width:860px){.topics{grid-template-columns:minmax(0,1fr)}}
+.tlist{list-style:none;margin:0;padding:6px 0}
+.tlist li{display:flex;gap:10px;align-items:flex-start;padding:8px 14px;border-bottom:1px solid var(--line)}
+.tlist li:last-child{border-bottom:none}
+.tlist .n{font-family:var(--f-mono);color:var(--ink-3);font-size:.8rem;min-width:22px;padding-top:1px}
+.tlist .x{flex:1;min-width:0;overflow-wrap:anywhere}
+.addt{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.addt input,.addt select{border:1px solid var(--line-2);border-radius:7px;padding:7px 10px;background:var(--panel);min-width:0}
+.addt input{flex:1 1 220px}
+
+/* forms */
+.form{padding:16px 18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+@media(max-width:700px){.form{grid-template-columns:minmax(0,1fr)}}
+.form label{display:grid;gap:4px;font-weight:700;font-size:.82rem;color:var(--ink-2);min-width:0}
+.form input[type=text],.form input[type=time],.form select{border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;background:var(--panel);font-weight:500;color:var(--ink);min-width:0;width:100%}
+.form .full{grid-column:1/-1}
+.form small{font-weight:500;color:var(--ink-3)}
+.radio{display:flex;gap:14px;flex-wrap:wrap;font-weight:600;color:var(--ink)}
+.radio label{display:inline-flex;flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:.88rem}
+
+/* gate / banners */
+.gate{max-width:560px;margin:60px auto;padding:26px;text-align:left}
+.gate h1{font-size:1.4rem;font-weight:800;margin-bottom:8px}
+.gate p{color:var(--ink-2);margin:6px 0}
+.banner{margin-top:16px;padding:12px 14px;border-radius:10px;font-size:.88rem;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.banner.err{background:var(--bad-soft);color:var(--bad)}.banner.info{background:var(--info-soft);color:var(--info)}
+.modal-bg{position:fixed;inset:0;background:rgba(10,15,13,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal-bg.on{display:flex}
+.modal{background:var(--panel);border-radius:14px;padding:20px;max-width:440px;width:100%;border:1px solid var(--line)}
+.modal h3{font-size:1.05rem;margin-bottom:6px}
+.modal p{color:var(--ink-2);margin:0 0 14px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:50vh;overflow-y:auto}
+.modal .row{display:flex;justify-content:flex-end;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:9px;font-weight:600;font-size:.88rem;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px)}
+.toast.on{opacity:1}
+.muted{color:var(--ink-3)}
+.hint{font-size:.8rem;color:var(--ink-3)}
+/* assistant */
+.ai{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr auto;min-height:0}
+.ai-log{padding:14px 16px;display:grid;gap:10px;max-height:460px;overflow-y:auto;align-content:start}
+.bub{max-width:min(720px,92%);padding:10px 13px;border-radius:12px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.92rem}
+.bub.u{justify-self:end;background:var(--ink);color:var(--bg);border-bottom-right-radius:4px}
+.bub.a{justify-self:start;background:var(--panel-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.bub.a.wait{color:var(--ink-3)}
+.bub .act{display:block;margin-top:6px;font-size:.8rem;color:var(--accent);font-weight:600}
+.ai-chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px}
+.ai-chips button{border:1px dashed var(--line-2);background:transparent;border-radius:999px;padding:4px 11px;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.ai-chips button:hover{border-color:var(--accent);color:var(--accent)}
+.ai-in{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line);align-items:flex-end}
+.ai-in textarea{flex:1;min-width:0;border:1px solid var(--line-2);border-radius:9px;padding:9px 11px;background:var(--panel);resize:vertical;min-height:44px;max-height:180px}
+.sug{display:flex;gap:8px;align-items:flex-start;padding:8px 14px;border-bottom:1px solid var(--line)}
+.sug:last-child{border-bottom:none}
+.sug .x{flex:1;min-width:0}
+.sug .why{display:block;font-size:.8rem;color:var(--ink-3)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="top"><div class="top-in">
+  <div class="logo"><div class="logo-mark">QT</div>Trạm Quản Trị Web</div>
+  <nav class="nav" aria-label="Mục">
+    <a href="#tro-ly">Trợ lý</a><a href="#web">Web</a><a href="#lich">Lịch đăng</a><a href="#chu-de">Chủ đề</a><a href="#bai-viet">Bài viết</a><a href="#tac-vu">Tác vụ</a><a href="#them-web">Thêm web</a>
+  </nav>
+  <div class="who" id="who"><span class="pill p-off">Đang kiểm tra đăng nhập…</span></div>
+</div></header>
+
+<main class="wrap" id="app">
+  <div id="gate" hidden></div>
+  <div id="main">
+    <div id="banners"></div>
+    <div class="strip" id="strip">
+      <div class="cell"><div class="k">Web đang quản lý</div><div class="v mono" id="st-sites">–</div><div class="s" id="st-sites-s">&nbsp;</div></div>
+      <div class="cell"><div class="k">Tác vụ đang bật</div><div class="v mono" id="st-tasks">–</div><div class="s" id="st-tasks-s">&nbsp;</div></div>
+      <div class="cell"><div class="k">Lần chạy tới</div><div class="v mono" id="st-next">–</div><div class="s" id="st-next-s">&nbsp;</div></div>
+      <div class="cell"><div class="k">Bài đã đăng</div><div class="v mono" id="st-posts">–</div><div class="s" id="st-posts-s">&nbsp;</div></div>
+    </div>
+
+    <section id="tro-ly">
+      <div class="sh"><div><h2>Trợ lý Claude</h2><p>Hỏi về tình hình các web, nhờ gợi ý chủ đề, hoặc ra lệnh như “tạm dừng web X”, “đổi lịch sang thứ 3 và thứ 7 lúc 6 giờ”, “viết ngay bài về nghỉ thai sản”. Claude chỉ thực hiện thao tác sau khi bạn bấm đồng ý.</p></div>
+      <button class="btn ghost" id="ai-clear">Xóa cuộc trò chuyện</button></div>
+      <div class="panel ai">
+        <div class="ai-log" id="ai-log"><div class="bub a">Chào bạn, mình là trợ lý của Trạm Quản Trị. Mình xem được danh sách web, lịch viết bài, hàng chờ chủ đề và các bài đã đăng. Bạn muốn làm gì?</div></div>
+        <div class="ai-chips" id="ai-chips">
+          <button type="button">Tóm tắt tình hình các web hôm nay</button>
+          <button type="button">Gợi ý 5 chủ đề mới chưa viết, thêm vào hàng chờ</button>
+          <button type="button">Lịch viết bài hiện tại có hợp lý không?</button>
+          <button type="button">Bài nào nên chia sẻ lên Facebook tuần này?</button>
+        </div>
+        <form class="ai-in" id="ai-form"><textarea id="ai-text" rows="1" placeholder="Nhập câu hỏi hoặc yêu cầu…" aria-label="Tin nhắn cho Claude"></textarea><button class="btn pri" type="submit" id="ai-send">Gửi</button><button class="btn" type="button" id="ai-stop" hidden>Dừng</button></form>
+      </div>
+    </section>
+
+    <section id="web">
+      <div class="sh"><div><h2>Web đang quản lý</h2><p>Bật hoặc tắt viết bài tự động, đổi lịch, viết bài ngay và mở nhanh các trang quản trị của từng web.</p></div>
+      <button class="btn" id="reload">↻ Tải lại trạng thái</button></div>
+      <div class="sites" id="sites"><div class="panel empty">Đang tải danh sách web…</div></div>
+    </section>
+
+    <section id="lich">
+      <div class="sh"><div><h2>Lịch đăng 14 ngày tới</h2><p>Tính từ lịch của các tác vụ viết bài. Lịch đã tạm dừng hiện gạch ngang.</p></div></div>
+      <div class="cal" id="cal"></div>
+    </section>
+
+    <section id="chu-de">
+      <div class="sh"><div><h2>Hàng chờ chủ đề</h2><p>Chủ đề thêm ở đây được ưu tiên viết trước danh sách chủ đề có sẵn trong kho. Bạn cũng có thể bấm “Viết ngay” để giao chủ đề cho Claude viết luôn.</p></div></div>
+      <div class="topics">
+        <div class="panel"><div class="sh" style="padding:12px 14px 0;margin:0"><h3 style="font-size:.95rem">Chờ viết</h3></div><ul class="tlist" id="t-wait"></ul>
+          <form class="addt" id="t-form"><select id="t-site" aria-label="Web"></select><input id="t-text" type="text" placeholder="Ví dụ: Nghỉ việc riêng có lương khi kết hôn" aria-label="Chủ đề mới"><button class="btn pri" type="submit">Thêm chủ đề</button></form>
+        </div>
+        <div class="panel"><div class="sh" style="padding:12px 14px 0;margin:0"><h3 style="font-size:.95rem">Đã giao / đã viết</h3></div><ul class="tlist" id="t-done"></ul>
+          <div style="border-top:1px solid var(--line);padding:12px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn" type="button" id="sug-btn">✦ Nhờ Claude gợi ý chủ đề</button><span class="hint" id="sug-msg"></span></div>
+          <div id="sug-list"></div></div>
+      </div>
+    </section>
+
+    <section id="bai-viet">
+      <div class="sh"><div><h2>Bài viết đã đăng</h2><p>Bài do tác vụ tự động viết được ghi vào đây sau mỗi lần chạy.</p></div>
+      <select id="p-filter" class="btn" aria-label="Lọc theo web"><option value="">Tất cả web</option></select></div>
+      <div class="panel tbl"><table><thead><tr><th>Ngày</th><th>Bài viết</th><th>Web</th><th>Nguồn</th></tr></thead><tbody id="posts"><tr><td colspan="4" class="empty">Đang tải…</td></tr></tbody></table></div>
+    </section>
+
+    <section id="tac-vu">
+      <div class="sh"><div><h2>Tất cả tác vụ theo lịch</h2><p>Mọi tác vụ theo lịch trong tài khoản Claude của bạn, kể cả tác vụ chưa gắn với web nào.</p></div></div>
+      <div class="panel tbl"><table><thead><tr><th>Tác vụ</th><th>Lịch</th><th>Lần tới</th><th>Lần gần nhất</th><th>Bật/tắt</th></tr></thead><tbody id="tasks"><tr><td colspan="5" class="empty">Đang tải…</td></tr></tbody></table></div>
+    </section>
+
+    <section id="them-web">
+      <div class="sh"><div><h2>Thêm web quản lý</h2><p>Mỗi web cần có kho GitHub đã nối với Netlify và tệp hướng dẫn CLAUDE.md giống web Thư Viện Người Lao Động. Nếu chưa có, hãy nhắn Claude để được thiết lập.</p></div></div>
+      <form class="panel form" id="add-form" autocomplete="off">
+        <label>Tên web<input type="text" id="f-name" required placeholder="Ví dụ: Thư Viện Kế Toán"></label>
+        <label>Tên miền<input type="text" id="f-domain" required placeholder="vidu.com"></label>
+        <label>Kho GitHub <small>(chủ/kho)</small><input type="text" id="f-repo" placeholder="nghiepvuquang/ten-kho"></label>
+        <label>Trang dự án Netlify <small>(tùy chọn)</small><input type="text" id="f-netlify" placeholder="https://app.netlify.com/projects/…"></label>
+        <label>Mã Google Analytics <small>(tùy chọn)</small><input type="text" id="f-ga" placeholder="G-XXXXXXXXXX"></label>
+        <label>Tác vụ viết bài
+          <select id="f-mode"><option value="none">Chưa gắn tác vụ</option><option value="new">Tạo tác vụ mới theo lịch bên dưới</option></select>
+        </label>
+        <div class="full" id="f-sched" hidden>
+          <label style="margin-bottom:8px">Ngày viết bài</label>
+          <div class="days" id="f-days"></div>
+          <label style="margin-top:10px;max-width:180px">Giờ (giờ Việt Nam)<input type="time" id="f-time" value="05:52"></label>
+        </div>
+        <div class="full" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn pri" type="submit">Thêm web</button><span id="add-msg"></span></div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<div class="modal-bg" id="modal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-t"><h3 id="m-t"></h3><p id="m-p"></p><div class="row"><button class="btn" id="m-no">Hủy</button><button class="btn pri" id="m-yes">Đồng ý</button></div></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+const SRV = 'Claude Code Remote';
+const TZ = 'Asia/Ho_Chi_Minh';
+const DAYN = ['CN','T2','T3','T4','T5','T6','T7'];
+const DAYL = ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const S = { sites: [], posts: [], topics: [], triggers: null, trigErr: null, busy: new Set() };
+let db = null, mcp = null;
+
+/* ---------- helpers ---------- */
+function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('on'),2600); }
+function confirmBox(title, text, yes='Đồng ý'){ return new Promise(res=>{ $('m-t').textContent=title; $('m-p').textContent=text; $('m-yes').textContent=yes; $('modal').classList.add('on');
+  const done=v=>{ $('modal').classList.remove('on'); $('m-yes').onclick=$('m-no').onclick=null; res(v); }; $('m-yes').onclick=()=>done(true); $('m-no').onclick=()=>done(false); $('m-yes').focus(); }); }
+const fmtVN = (iso, withDay=true) => { if(!iso) return '–'; const d=new Date(iso); if(isNaN(d)) return '–';
+  const p=new Intl.DateTimeFormat('vi-VN',{timeZone:TZ,weekday:withDay?'short':undefined,day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(d); return p; };
+const fmtDate = s => { if(!s) return '–'; const [y,m,d]=String(s).slice(0,10).split('-'); return d&&m&&y?`${d}/${m}/${y}`:esc(s); };
+function vnParts(date){ const f=new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(date); const o={}; f.forEach(x=>o[x.type]=x.value); return o; }
+const WK={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
+function parseCron(c){ if(!c) return null; let tz='UTC', s=c.trim(); const m=s.match(/^CRON_TZ=(\S+)\s+(.*)$/); if(m){tz=m[1]; s=m[2];}
+  const f=s.split(/\s+/); if(f.length!==5) return null; const [mi,h,dom,mon,dow]=f;
+  if(!/^\d+$/.test(mi)||!/^\d+$/.test(h)||dom!=='*'||mon!=='*') return {raw:c, tz};
+  let days; if(dow==='*') days=[0,1,2,3,4,5,6]; else { days=[]; for(const part of dow.split(',')){ const r=part.match(/^(\d)-(\d)$/); if(r){for(let i=+r[1];i<=+r[2];i++)days.push(i%7);} else if(/^\d$/.test(part)) days.push(+part%7); else return {raw:c,tz}; } }
+  return {raw:c, tz, min:+mi, hour:+h, days:[...new Set(days)].sort((a,b)=>a-b)}; }
+function cronText(c){ const p=parseCron(c); if(!p) return 'Không có lịch lặp'; if(p.days===undefined) return p.raw;
+  const hm=`${String(p.hour).padStart(2,'0')}:${String(p.min).padStart(2,'0')}`; const tzs=p.tz===TZ?'':` (${p.tz})`;
+  const d=p.days.length===7?'Mỗi ngày':p.days.map(x=>DAYN[x]).join(', '); return `${d} · ${hm}${tzs}`; }
+function buildCron(days, hhmm){ const [h,m]=hhmm.split(':').map(Number); return `CRON_TZ=${TZ} ${m} ${h} * * ${days.sort((a,b)=>a-b).join(',')}`; }
+function sessionLink(id){ if(!id) return null; return 'https://claude.ai/code/session_' + id.replace(/^cse_/,'').replace(/^session_/,''); }
+function runPill(lr){ if(!lr) return '<span class="pill p-off">Chưa chạy</span>';
+  const st=(lr.status||'').replace('ROUTINE_RUN_STATUS_','');
+  const map={SUCCEEDED:['p-run','Thành công'],FAILED:['p-bad','Lỗi'],RUNNING:['p-info','Đang chạy'],PENDING:['p-info','Đang chờ'],CANCELLED:['p-off','Đã hủy']};
+  const [cls,txt]=map[st]||['p-off',st||'Không rõ']; return `<span class="pill ${cls}">${txt}</span>`; }
+const trig = id => (S.triggers||[]).find(t=>t.id===id);
+function mcpErrText(e){ const c=e&&e.code; const m={
+  needs_reauth:'Kết nối “Claude Code Remote” cần đăng nhập lại: vào claude.ai → Cài đặt → Connectors.',
+  server_not_connected:'Chưa có kết nối “Claude Code Remote” cho tài khoản này. Thêm trong claude.ai → Cài đặt → Connectors.',
+  not_in_manifest:'Bạn chưa cho phép app dùng kết nối “Claude Code Remote”. Bấm “Cho phép kết nối” rồi đồng ý.',
+  approval_required:'Thao tác này cần bạn đồng ý trong hộp thoại của Claude. Bấm lại và chọn Cho phép.',
+  blocked_by_policy:'Tổ chức của bạn đang chặn thao tác này.',
+  server_unavailable:'Máy chủ tác vụ tạm thời không phản hồi. Thử lại sau ít phút.',
+  tool_error:'Claude báo lỗi: '+(e&&e.message||''),
+  not_granted:'App chưa được cấp quyền kết nối.', capability_disabled:'Kết nối không khả dụng ở chế độ xem này.' };
+  return m[c] || ('Không thực hiện được ('+(c||'lỗi')+'). '+(e&&e.message?e.message:'')); }
+
+/* ---------- MCP ---------- */
+async function call(tool, input){ if(!mcp) throw {code:'capability_disabled'}; const r=await mcp.callTool(SRV, tool, input, {cache:false}); return r.payload; }
+async function loadTriggers(){ $('reload').disabled=true;
+  try{ const p=await call('list_triggers',{limit:100}); S.triggers=(p&&p.data)||[]; S.trigErr=null; }
+  catch(e){ S.trigErr=e; if(['needs_reauth','server_not_connected','not_in_manifest','blocked_by_policy','not_granted'].includes(e.code)) S.triggers=null; }
+  $('reload').disabled=false; renderAll(); }
+
+/* ---------- render ---------- */
+function renderBanners(){ const b=[];
+  if(!mcp) b.push(`<div class="banner info">Không gọi được tác vụ theo lịch từ chế độ xem này. Mở app trong claude.ai (đã đăng nhập) để bật/tắt và chạy tác vụ.</div>`);
+  else if(S.trigErr) b.push(`<div class="banner err"><span>${esc(mcpErrText(S.trigErr))}</span>${S.trigErr.code==='not_in_manifest'||S.trigErr.code==='approval_required'?'<button class="btn sm" id="grant">Cho phép kết nối</button>':''}</div>`);
+  if(!db) b.push(`<div class="banner err">Không mở được kho dữ liệu của app. Hãy chắc chắn bạn đang đăng nhập claude.ai bằng tài khoản chủ sở hữu.</div>`);
+  $('banners').innerHTML=b.join('');
+  const g=$('grant'); if(g) g.onclick=async()=>{ try{ const perm=await claude.use('permissions'); if(perm) await perm.request(['mcp:'+SRV]); }catch(_){} loadTriggers(); };
+}
+function renderStrip(){
+  $('st-sites').textContent=S.sites.length; $('st-sites-s').textContent=S.sites.map(s=>s.domain).join(', ')||'Chưa có web';
+  if(S.triggers){ const on=S.triggers.filter(t=>t.enabled&&t.cron_expression); $('st-tasks').textContent=on.length;
+    $('st-tasks-s').textContent=`trên ${S.triggers.filter(t=>t.cron_expression).length} tác vụ lặp lại`;
+    const nx=on.map(t=>t.next_run_at).filter(Boolean).sort()[0]; const owner=on.find(t=>t.next_run_at===nx);
+    $('st-next').textContent=nx?fmtVN(nx):'–'; $('st-next-s').textContent=owner?owner.name:'Không có lịch đang bật'; }
+  else { $('st-tasks').textContent='–'; $('st-next').textContent='–'; $('st-tasks-s').textContent='Chưa đọc được tác vụ'; $('st-next-s').textContent=' '; }
+  $('st-posts').textContent=S.posts.length; const auto=S.posts.filter(p=>p.source==='auto').length; $('st-posts-s').textContent=`${auto} bài do tác vụ tự động viết`;
+}
+function siteLinks(s){ const L=[]; const d=s.domain;
+  L.push([`https://${d}/`,'Mở web']); L.push([`https://${d}/bai-viet/`,'Danh sách bài']);
+  if(s.repo) L.push([`https://github.com/${s.repo}`,'GitHub']);
+  if(s.netlify) L.push([s.netlify,'Netlify']);
+  L.push([`https://search.google.com/search-console?resource_id=sc-domain:${d}`,'Search Console']);
+  if(s.ga) L.push(['https://analytics.google.com/','Analytics']);
+  return L.map(([h,t])=>`<a class="btn sm" href="${esc(h)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join(''); }
+function renderSites(){ const box=$('sites');
+  if(!S.sites.length){ box.innerHTML=`<div class="panel empty">Chưa có web nào. Thêm web đầu tiên ở mục <a href="#them-web">Thêm web</a>.</div>`; return; }
+  box.innerHTML=S.sites.map(s=>{
+    const ts=(s.triggerIds||[]).map(trig).filter(Boolean); const t=ts[0];
+    const known=S.triggers!==null; const anyOn=ts.some(x=>x.enabled);
+    const status=!(s.triggerIds||[]).length?'<span class="pill p-off">Chưa gắn tác vụ</span>':!known?'<span class="pill p-off">Chưa rõ</span>':!t?'<span class="pill p-bad">Không tìm thấy tác vụ</span>':anyOn?'<span class="pill p-run">Đang tự động</span>':'<span class="pill p-pause">Tạm dừng</span>';
+    const posts=S.posts.filter(p=>p.siteId===s.id); const last=posts[0];
+    const busy=S.busy.has(s.id);
+    const p=t?parseCron(t.cron_expression):null;
+    return `<article class="panel site" data-site="${esc(s.id)}">
+      <div class="site-h"><div><h3>${esc(s.name)}</h3><div class="dom">${esc(s.domain)}${s.repo?' · '+esc(s.repo):''}</div></div>${status}</div>
+      <div class="kv">
+        <div><div class="k">Lịch viết bài</div><div class="v">${t?esc(cronText(t.cron_expression)):'–'}</div></div>
+        <div><div class="k">Lần chạy tới</div><div class="v mono">${t&&t.enabled?fmtVN(t.next_run_at):'–'}</div></div>
+        <div><div class="k">Lần chạy gần nhất</div><div class="v">${t?runPill(t.last_run):'–'} <span class="mono muted">${t&&t.last_run?fmtVN(t.last_run.fired_at):''}</span>${t&&t.last_run&&t.last_run.session_id?` <a href="${esc(sessionLink(t.last_run.session_id))}" target="_blank" rel="noopener">xem báo cáo</a>`:''}</div></div>
+        <div><div class="k">Bài đã đăng</div><div class="v"><span class="mono">${posts.length}</span>${last?` · mới nhất ${fmtDate(last.date)}`:''}</div></div>
+      </div>
+      <div class="links">${siteLinks(s)}</div>
+      <div class="actions">
+        ${t?`<button class="switch" role="switch" aria-checked="${t.enabled}" data-act="toggle" ${busy||!mcp?'disabled':''}><span class="tr"></span>${t.enabled?'Viết bài tự động: BẬT':'Viết bài tự động: TẮT'}</button>
+        <button class="btn sm" data-act="run" ${busy||!mcp?'disabled':''}>▶ Viết bài ngay</button>
+        <button class="btn sm" data-act="topic" ${!mcp?'disabled':''}>✎ Viết theo chủ đề…</button>
+        <button class="btn sm" data-act="sched" ${!mcp?'disabled':''}>🕑 Đổi lịch</button>`:`<span class="hint">Chưa gắn tác vụ viết bài.</span>`}
+        <button class="btn sm" data-act="link">⇄ Gắn tác vụ</button>
+        <span style="flex:1"></span>
+        <button class="btn sm ghost danger" data-act="remove">Gỡ khỏi danh sách</button>
+      </div>
+      <form class="inline-form" data-form="topic"><input type="text" name="topic" placeholder="Chủ đề muốn viết ngay, ví dụ: Nghỉ việc riêng có lương" aria-label="Chủ đề"><button class="btn pri sm" type="submit">Giao cho Claude viết</button><button class="btn sm ghost" type="button" data-close>Đóng</button></form>
+      <form class="inline-form" data-form="sched"><div class="days">${DAYN.map((n,i)=>`<label><input type="checkbox" name="d" value="${i}" ${p&&p.days&&p.days.includes(i)?'checked':''}>${n}</label>`).join('')}</div><input type="time" name="time" value="${p&&p.hour!==undefined?String(p.hour).padStart(2,'0')+':'+String(p.min).padStart(2,'0'):'05:52'}" aria-label="Giờ"><button class="btn pri sm" type="submit">Lưu lịch</button><button class="btn sm ghost" type="button" data-close>Đóng</button></form>
+      <form class="inline-form" data-form="link"><select name="tid" aria-label="Tác vụ" style="border:1px solid var(--line-2);border-radius:7px;padding:6px 10px;background:var(--panel);flex:1 1 260px;min-width:0"><option value="">— Bỏ gắn tác vụ —</option>${(S.triggers||[]).filter(x=>x.cron_expression).map(x=>`<option value="${esc(x.id)}" ${(s.triggerIds||[]).includes(x.id)?'selected':''}>${esc(x.name)}</option>`).join('')}</select><button class="btn pri sm" type="submit">Lưu</button><button class="btn sm ghost" type="button" data-close>Đóng</button></form>
+    </article>`; }).join('');
+}
+function renderCalendar(){ const box=$('cal'); const now=new Date(); const ev={};
+  const tasks=(S.triggers||[]).filter(t=>t.cron_expression);
+  const nameFor=t=>{ const s=S.sites.find(x=>(x.triggerIds||[]).includes(t.id)); return s?s.domain:t.name; };
+  for(let i=0;i<14;i++){ const d=new Date(now.getTime()+i*864e5); const vp=vnParts(d); const key=`${vp.year}-${vp.month}-${vp.day}`; ev[key]={wd:WK[vp.weekday], d:vp, items:[]}; }
+  tasks.forEach(t=>{ const p=parseCron(t.cron_expression); if(!p||!p.days||p.tz!==TZ) return;
+    Object.entries(ev).forEach(([k,o])=>{ if(!p.days.includes(o.wd)) return; const hm=`${String(p.hour).padStart(2,'0')}:${String(p.min).padStart(2,'0')}`;
+      const isToday=k===Object.keys(ev)[0]; const nowP=vnParts(now); if(isToday && (`${nowP.hour}:${nowP.minute}` > hm)) return;
+      o.items.push({hm, name:nameFor(t), on:t.enabled}); }); });
+  const keys=Object.keys(ev);
+  box.innerHTML=keys.map((k,i)=>{ const o=ev[k]; return `<div class="day ${i===0?'today':''}"><div class="d">${DAYL[o.wd]} · ${o.d.day}/${o.d.month}${i===0?' · hôm nay':''}</div>${o.items.sort((a,b)=>a.hm.localeCompare(b.hm)).map(x=>`<div class="ev ${x.on?'':'off'}"><b>${x.hm}</b> ${esc(x.name)}</div>`).join('')}</div>`; }).join('');
+  if(S.triggers===null) box.insertAdjacentHTML('afterbegin','');
+}
+function siteName(id){ const s=S.sites.find(x=>x.id===id); return s?s.domain:'–'; }
+function renderTopics(){ const wait=S.topics.filter(t=>t.status==='cho').sort((a,b)=>(a.createdAt||'').localeCompare(b.createdAt||''));
+  const done=S.topics.filter(t=>t.status!=='cho').sort((a,b)=>(b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||'')).slice(0,30);
+  $('t-wait').innerHTML=wait.length?wait.map((t,i)=>`<li data-topic="${esc(t.id)}"><span class="n">${i+1}</span><span class="x">${esc(t.text)}<br><span class="hint">${esc(siteName(t.siteId))}</span></span><button class="btn sm" data-tact="now" ${!mcp?'disabled':''}>Viết ngay</button><button class="btn sm ghost danger" data-tact="del" aria-label="Xóa">✕</button></li>`).join(''):'<li class="muted">Chưa có chủ đề nào chờ. Tác vụ sẽ dùng danh sách chủ đề có sẵn trong kho.</li>';
+  $('t-done').innerHTML=done.length?done.map(t=>`<li><span class="x">${esc(t.text)}<br><span class="hint">${esc(siteName(t.siteId))} · ${t.status==='da-viet'?'Đã viết':'Đã giao cho Claude'} ${t.updatedAt?fmtVN(t.updatedAt):''}${t.url?` · <a href="${esc(t.url)}" target="_blank" rel="noopener">xem bài</a>`:''}</span></span></li>`).join(''):'<li class="muted">Chưa có.</li>';
+  const sel=$('t-site'); const cur=sel.value; sel.innerHTML=S.sites.map(s=>`<option value="${esc(s.id)}">${esc(s.domain)}</option>`).join('')||'<option value="">Chưa có web</option>'; if(cur) sel.value=cur;
+}
+function renderPosts(){ const f=$('p-filter'); const cur=f.value; f.innerHTML='<option value="">Tất cả web</option>'+S.sites.map(s=>`<option value="${esc(s.id)}">${esc(s.domain)}</option>`).join(''); f.value=cur;
+  const rows=S.posts.filter(p=>!cur||p.siteId===cur);
+  $('posts').innerHTML=rows.length?rows.map(p=>`<tr><td class="t mono">${fmtDate(p.date)}</td><td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></td><td class="t">${esc(siteName(p.siteId))}</td><td class="t">${p.source==='auto'?'<span class="pill p-run">Tự động</span>':'<span class="pill p-off">Viết tay</span>'}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">Chưa có bài viết nào được ghi lại.</td></tr>'; }
+function renderTasks(){ const tb=$('tasks');
+  if(S.triggers===null){ tb.innerHTML=`<tr><td colspan="5" class="empty">${esc(S.trigErr?mcpErrText(S.trigErr):'Đang tải…')}</td></tr>`; return; }
+  const list=S.triggers.filter(t=>t.cron_expression||t.enabled);
+  tb.innerHTML=list.length?list.map(t=>{ const site=S.sites.find(s=>(s.triggerIds||[]).includes(t.id)); const busy=S.busy.has(t.id);
+    return `<tr data-tid="${esc(t.id)}"><td><b>${esc(t.name)}</b><br><span class="hint">${site?'Gắn với '+esc(site.domain):'Chưa gắn với web nào'}</span></td><td>${esc(cronText(t.cron_expression))}${t.run_once_at&&!t.cron_expression?'Một lần · '+fmtVN(t.run_once_at):''}</td><td class="t mono">${t.enabled?fmtVN(t.next_run_at):'–'}</td><td class="t">${runPill(t.last_run)}<br><span class="hint mono">${t.last_run?fmtVN(t.last_run.fired_at):''}</span></td><td>${t.cron_expression?`<button class="switch" role="switch" aria-checked="${t.enabled}" data-tact2="toggle" ${busy||!mcp?'disabled':''}><span class="tr"></span>${t.enabled?'Bật':'Tắt'}</button>`:'<span class="hint">—</span>'}</td></tr>`; }).join(''):'<tr><td colspan="5" class="empty">Chưa có tác vụ theo lịch nào.</td></tr>'; }
+function renderAll(){ renderBanners(); renderStrip(); renderSites(); renderCalendar(); renderTopics(); renderPosts(); renderTasks(); }
+
+/* ---------- actions ---------- */
+async function setEnabled(tid, on, key){ S.busy.add(key); renderAll();
+  try{ await call('update_trigger',{trigger_id:tid, enabled:on}); toast(on?'Đã bật viết bài tự động':'Đã tạm dừng viết bài tự động'); }
+  catch(e){ toast(mcpErrText(e)); }
+  S.busy.delete(key); await loadTriggers(); }
+async function fireTask(tid, text, key){ S.busy.add(key); renderAll();
+  try{ await call('fire_trigger', text?{trigger_id:tid, text}:{trigger_id:tid}); toast('Đã giao việc cho Claude. Bài mới thường lên web sau 5–15 phút.'); return true; }
+  catch(e){ toast(mcpErrText(e)); return false; }
+  finally{ S.busy.delete(key); loadTriggers(); } }
+const topicText = t => `Lần chạy này do chủ web giao từ app quản trị. Hãy viết bài theo CHỦ ĐỀ SAU thay cho chủ đề đầu tiên trong TOPICS.md (vẫn tuân thủ đầy đủ CLAUDE.md, kiểm tra không trùng bài cũ; nếu không đủ căn cứ pháp lý thì không đăng và báo lý do): "${t}"`;
+
+document.addEventListener('click', async ev => {
+  const b=ev.target.closest('[data-act]'); if(b){ const card=b.closest('[data-site]'); const s=S.sites.find(x=>x.id===card.dataset.site); const t=trig((s.triggerIds||[])[0]); const act=b.dataset.act;
+    const openForm=n=>{ card.querySelectorAll('.inline-form').forEach(f=>f.classList.toggle('on', f.dataset.form===n && !f.classList.contains('on'))); const f=card.querySelector(`[data-form="${n}"]`); const i=f&&f.querySelector('input,select'); if(i&&f.classList.contains('on')) i.focus(); };
+    if(act==='toggle'&&t){ if(t.enabled && !(await confirmBox('Tạm dừng viết bài tự động?',`Tác vụ “${t.name}” sẽ không tự chạy cho đến khi bạn bật lại.`,'Tạm dừng'))) return; setEnabled(t.id,!t.enabled,s.id); }
+    else if(act==='run'&&t){ if(await confirmBox('Viết một bài ngay?',`Claude sẽ viết 1 bài mới theo chủ đề tiếp theo và đăng lên ${s.domain}.`,'Viết ngay')) fireTask(t.id,null,s.id); }
+    else if(act==='topic') openForm('topic'); else if(act==='sched') openForm('sched'); else if(act==='link') openForm('link');
+    else if(act==='remove'){ if(!(await confirmBox('Gỡ web khỏi danh sách?',`${s.domain} sẽ không còn hiện trong app. Web, kho GitHub và tác vụ theo lịch vẫn giữ nguyên; muốn dừng viết bài hãy tắt công tắc trước.`,'Gỡ'))) return;
+      try{ await db.doc('sites/'+s.id).delete(); toast('Đã gỡ '+s.domain); }catch(e){ toast('Không gỡ được: '+(e.code||'')); } }
+    return; }
+  const c=ev.target.closest('[data-close]'); if(c){ c.closest('.inline-form').classList.remove('on'); return; }
+  const ta=ev.target.closest('[data-tact]'); if(ta){ const li=ta.closest('[data-topic]'); const tp=S.topics.find(x=>x.id===li.dataset.topic);
+    if(ta.dataset.tact==='del'){ try{ await db.doc('topics/'+tp.id).delete(); }catch(e){ toast('Không xóa được'); } return; }
+    if(ta.dataset.tact==='now'){ const s=S.sites.find(x=>x.id===tp.siteId); const tid=s&&(s.triggerIds||[])[0]; if(!tid){ toast('Web này chưa gắn tác vụ viết bài.'); return; }
+      if(!(await confirmBox('Viết bài này ngay?',`“${tp.text}” sẽ được giao cho Claude viết và đăng lên ${s.domain}.`,'Viết ngay'))) return;
+      if(await fireTask(tid, topicText(tp.text), tp.id)){ try{ await db.doc('topics/'+tp.id).update({status:'da-giao', updatedAt:new Date().toISOString()}); }catch(_){} } }
+    return; }
+  const t2=ev.target.closest('[data-tact2]'); if(t2){ const tid=t2.closest('[data-tid]').dataset.tid; const t=trig(tid); if(!t) return;
+    if(t.enabled && !(await confirmBox('Tạm dừng tác vụ?',`“${t.name}” sẽ không tự chạy cho đến khi bạn bật lại.`,'Tạm dừng'))) return; setEnabled(tid,!t.enabled,tid); }
+});
+document.addEventListener('submit', async ev => {
+  const f=ev.target; if(!f.dataset || !f.dataset.form) return; ev.preventDefault();
+  const card=f.closest('[data-site]'); const s=S.sites.find(x=>x.id===card.dataset.site); const t=trig((s.triggerIds||[])[0]);
+  if(f.dataset.form==='topic'){ const v=f.topic.value.trim(); if(!v){ f.topic.focus(); return; } if(!t) return;
+    if(await fireTask(t.id, topicText(v), s.id)){ try{ await db.collection('topics').add({siteId:s.id,text:v,status:'da-giao',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}); }catch(_){} f.reset(); f.classList.remove('on'); } }
+  if(f.dataset.form==='sched'){ const days=[...f.querySelectorAll('input[name=d]:checked')].map(x=>+x.value); const time=f.time.value; if(!days.length||!time){ toast('Chọn ít nhất một ngày và giờ chạy.'); return; } if(!t) return;
+    S.busy.add(s.id); renderAll(); try{ await call('update_trigger',{trigger_id:t.id, cron_expression:buildCron(days,time)}); toast('Đã lưu lịch mới'); }catch(e){ toast(mcpErrText(e)); } S.busy.delete(s.id); loadTriggers(); }
+  if(f.dataset.form==='link'){ const tid=f.tid.value; try{ await db.doc('sites/'+s.id).update({triggerIds: tid?[tid]:[]}); toast(tid?'Đã gắn tác vụ':'Đã bỏ gắn tác vụ'); }catch(e){ toast('Không lưu được: '+(e.code||'')); } }
+});
+$('t-form').addEventListener('submit', async ev => { ev.preventDefault(); const v=$('t-text').value.trim(); const sid=$('t-site').value; if(!v||!sid){ $('t-text').focus(); return; }
+  try{ await db.collection('topics').add({siteId:sid,text:v,status:'cho',createdAt:new Date().toISOString()}); $('t-text').value=''; toast('Đã thêm vào hàng chờ'); }catch(e){ toast('Không thêm được: '+(e.code||'')); } });
+$('p-filter').addEventListener('change', renderPosts);
+$('reload').addEventListener('click', loadTriggers);
+
+/* ---------- Claude assistant ---------- */
+let sample=null, aiTurns=[], aiCtl=null, toolsOK=false;
+function sampleErr(e){ const m={not_granted:'Bạn chưa cho phép app dùng Claude. Tải lại trang và bấm Cho phép khi được hỏi.',sampling_disabled:'Tài khoản này chưa dùng được Claude trong app.',rate_limited:'Bạn đang hỏi hơi nhanh hoặc đã chạm giới hạn sử dụng. Đợi một lát rồi thử lại.',session_expired:'Phiên đăng nhập đã hết hạn. Đăng nhập lại claude.ai.',refused:'Claude không trả lời yêu cầu này. Hãy diễn đạt khác.',prompt_too_large:'Cuộc trò chuyện quá dài. Bấm “Xóa cuộc trò chuyện” rồi hỏi lại.',invalid_json:'Claude trả lời chưa đúng định dạng. Bấm lại để thử lần nữa.',empty_completion:'Claude chưa đưa ra câu trả lời. Thử hỏi ngắn gọn hơn.'}; return m[e&&e.code]||'Có lỗi khi hỏi Claude ('+((e&&e.code)||'lỗi')+'). Thử lại sau.'; }
+function stateForAI(){ const now=new Intl.DateTimeFormat('vi-VN',{timeZone:TZ,dateStyle:'full',timeStyle:'short'}).format(new Date());
+  return JSON.stringify({bayGio:now,
+    web:S.sites.map(s=>({siteId:s.id,ten:s.name,tenMien:s.domain,kho:s.repo,tacVu:(s.triggerIds||[]).map(id=>{const t=trig(id);return t?{trigger_id:t.id,ten:t.name,lich:cronText(t.cron_expression),dangBat:t.enabled,lanToi:t.enabled?fmtVN(t.next_run_at):null,lanGanNhat:t.last_run?{ketQua:(t.last_run.status||'').replace('ROUTINE_RUN_STATUS_',''),luc:fmtVN(t.last_run.fired_at)}:null}:{trigger_id:id,khongTimThay:true};}),soBai:S.posts.filter(p=>p.siteId===s.id).length})),
+    tacVuKhac:(S.triggers||[]).filter(t=>t.cron_expression&&!S.sites.some(s=>(s.triggerIds||[]).includes(t.id))).map(t=>({trigger_id:t.id,ten:t.name,lich:cronText(t.cron_expression),dangBat:t.enabled})),
+    hangChoChuDe:S.topics.filter(t=>t.status==='cho').map(t=>({web:siteName(t.siteId),chuDe:t.text})),
+    baiDaDang:S.posts.slice(0,80).map(p=>({ngay:p.date,web:siteName(p.siteId),tieuDe:p.title,link:p.url}))}); }
+const RULES=()=>`Bạn là trợ lý trong "Trạm Quản Trị Web" của chủ web Vũ Quang Nghiệp (người Việt, không phải lập trình viên). Các web là trang thông tin/công cụ cho người lao động Việt Nam (lương, BHXH, thuế TNCN, luật lao động), kiếm tiền bằng quảng cáo; bài viết được Claude viết tự động theo lịch.
+Luôn trả lời bằng tiếng Việt, ngắn gọn, dễ hiểu, không dùng Markdown phức tạp (được dùng gạch đầu dòng "- "). Không bịa số liệu: chỉ nói về những gì có trong DỮ LIỆU bên dưới; nếu cần thông tin không có (lượt truy cập, thu nhập AdSense...), nói rõ app chưa có dữ liệu đó và chỉ chỗ xem (Google Analytics, Search Console).
+Khi người dùng yêu cầu thao tác (bật/tắt, đổi lịch, viết bài ngay, thêm chủ đề), hãy gọi công cụ tương ứng; ứng dụng sẽ tự hỏi người dùng xác nhận. Đổi lịch dùng giờ Việt Nam; ngày trong tuần đánh số 0=Chủ nhật, 1=Thứ 2 ... 6=Thứ 7. Khi gợi ý chủ đề, tránh trùng các bài đã đăng và hàng chờ.
+DỮ LIỆU HIỆN TẠI (JSON):
+${stateForAI()}`;
+function aiTools(){ return [
+ {name:'them_chu_de',description:'Thêm một hoặc nhiều chủ đề vào hàng chờ viết bài của một web. Trả về số chủ đề đã thêm.',inputSchema:{type:'object',properties:{siteId:{type:'string',description:'siteId của web'},chuDe:{type:'array',items:{type:'string'},description:'Danh sách chủ đề, mỗi chủ đề một câu ngắn'}},required:['siteId','chuDe']},
+  execute:async i=>{ const sid=String(i.siteId); if(!S.sites.some(s=>s.id===sid)) throw new Error('Không có web với siteId này'); const list=(Array.isArray(i.chuDe)?i.chuDe:[]).map(String).map(x=>x.trim()).filter(Boolean).slice(0,10); if(!list.length) throw new Error('Danh sách chủ đề trống');
+   if(!(await confirmBox('Thêm chủ đề vào hàng chờ?',`Claude đề nghị thêm ${list.length} chủ đề cho ${siteName(sid)}:\n• `+list.join('\n• '),'Thêm'))) return 'Người dùng không đồng ý.';
+   for(const t of list){ await db.collection('topics').add({siteId:sid,text:t,status:'cho',createdAt:new Date().toISOString()}); } return `Đã thêm ${list.length} chủ đề.`; }},
+ {name:'bat_tat_tac_vu',description:'Bật hoặc tạm dừng một tác vụ viết bài theo lịch. Trả về kết quả.',inputSchema:{type:'object',properties:{trigger_id:{type:'string'},bat:{type:'boolean',description:'true để bật, false để tạm dừng'}},required:['trigger_id','bat']},
+  execute:async i=>{ const t=trig(String(i.trigger_id)); if(!t) throw new Error('Không tìm thấy tác vụ'); const on=!!i.bat;
+   if(!(await confirmBox(on?'Bật tác vụ?':'Tạm dừng tác vụ?',`Claude đề nghị ${on?'bật':'tạm dừng'} “${t.name}”.`,on?'Bật':'Tạm dừng'))) return 'Người dùng không đồng ý.';
+   await call('update_trigger',{trigger_id:t.id,enabled:on}); loadTriggers(); return on?'Đã bật.':'Đã tạm dừng.'; }},
+ {name:'doi_lich',description:'Đổi lịch chạy của một tác vụ viết bài: các ngày trong tuần (0=CN..6=T7) và giờ HH:MM giờ Việt Nam. Trả về lịch mới.',inputSchema:{type:'object',properties:{trigger_id:{type:'string'},ngay:{type:'array',items:{type:'integer',minimum:0,maximum:6}},gio:{type:'string',description:'HH:MM'}},required:['trigger_id','ngay','gio']},
+  execute:async i=>{ const t=trig(String(i.trigger_id)); if(!t) throw new Error('Không tìm thấy tác vụ'); const days=[...new Set((i.ngay||[]).map(Number).filter(n=>n>=0&&n<=6))]; const g=String(i.gio||''); if(!days.length||!/^\d{1,2}:\d{2}$/.test(g)) throw new Error('Ngày hoặc giờ không hợp lệ');
+   const [h,m]=g.split(':').map(Number); if(h>23||m>59) throw new Error('Giờ không hợp lệ'); const cron=buildCron(days,`${h}:${m}`);
+   if(!(await confirmBox('Đổi lịch viết bài?',`“${t.name}”: ${cronText(t.cron_expression)} → ${cronText(cron)}`,'Đổi lịch'))) return 'Người dùng không đồng ý.';
+   await call('update_trigger',{trigger_id:t.id,cron_expression:cron}); loadTriggers(); return 'Đã đổi lịch thành '+cronText(cron); }},
+ {name:'viet_bai_ngay',description:'Chạy ngay tác vụ viết bài của một web, có thể kèm chủ đề cụ thể. Bài thường lên web sau 5–15 phút.',inputSchema:{type:'object',properties:{trigger_id:{type:'string'},chuDe:{type:'string',description:'Chủ đề cụ thể (tùy chọn)'}},required:['trigger_id']},
+  execute:async i=>{ const t=trig(String(i.trigger_id)); if(!t) throw new Error('Không tìm thấy tác vụ'); const cd=i.chuDe?String(i.chuDe).trim():'';
+   if(!(await confirmBox('Viết bài ngay?',`Chạy “${t.name}”${cd?` với chủ đề: “${cd}”`:' theo chủ đề tiếp theo'}.`,'Viết ngay'))) return 'Người dùng không đồng ý.';
+   await call('fire_trigger', cd?{trigger_id:t.id,text:topicText(cd)}:{trigger_id:t.id});
+   if(cd){ const s=S.sites.find(x=>(x.triggerIds||[]).includes(t.id)); if(s) try{ await db.collection('topics').add({siteId:s.id,text:cd,status:'da-giao',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}); }catch(_){} }
+   loadTriggers(); return 'Đã giao việc, bài sẽ lên web sau ít phút.'; }}
+ ]; }
+function addBubble(role, text){ const d=document.createElement('div'); d.className='bub '+(role==='user'?'u':'a'); d.textContent=text; $('ai-log').appendChild(d); $('ai-log').scrollTop=$('ai-log').scrollHeight; return d; }
+async function askAI(q){ if(!sample||!q.trim()) return; addBubble('user',q); aiTurns.push({role:'user',content:q}); if(aiTurns.length>16) aiTurns=aiTurns.slice(-16);
+  while(aiTurns.length && aiTurns[0].role!=='user') aiTurns.shift();
+  const b=addBubble('assistant','Claude đang suy nghĩ…'); b.classList.add('wait'); $('ai-send').disabled=true; $('ai-stop').hidden=false; aiCtl=new AbortController();
+  const usedTools=[]; const tools=toolsOK&&mcp&&db?aiTools().map(t=>({...t,execute:async(i,c)=>{ usedTools.push(t.name); return t.execute(i,c); }})):undefined;
+  try{ const opts={signal:aiCtl.signal,onText:({text})=>{ b.classList.remove('wait'); b.textContent=text; $('ai-log').scrollTop=$('ai-log').scrollHeight; }};
+    if(tools) opts.tools=tools; else opts.cache=false;
+    const r=await sample([{role:'user',content:RULES()},...aiTurns],opts); b.textContent=r.text; aiTurns.push({role:'assistant',content:r.text}); if(r.truncated){ const n=document.createElement('span'); n.className='act'; n.textContent='(Câu trả lời bị cắt ngắn, hãy hỏi gọn hơn.)'; b.appendChild(n); } }
+  catch(e){ b.classList.remove('wait'); if(e.code==='cancelled'){ b.textContent=(e.text||'')+(e.text?'\n':'')+'(Đã dừng)'; } else { b.textContent=(e.text?e.text+'\n\n':'')+sampleErr(e); } aiTurns.pop(); }
+  finally{ $('ai-send').disabled=false; $('ai-stop').hidden=true; aiCtl=null; } }
+$('ai-form').addEventListener('submit',ev=>{ ev.preventDefault(); const v=$('ai-text').value; $('ai-text').value=''; askAI(v); });
+$('ai-text').addEventListener('keydown',ev=>{ if(ev.key==='Enter'&&!ev.shiftKey){ ev.preventDefault(); $('ai-form').requestSubmit(); } });
+$('ai-chips').addEventListener('click',ev=>{ const b=ev.target.closest('button'); if(b) askAI(b.textContent); });
+$('ai-stop').addEventListener('click',()=>aiCtl&&aiCtl.abort());
+$('ai-clear').addEventListener('click',()=>{ aiTurns=[]; $('ai-log').innerHTML='<div class="bub a">Đã xóa. Bạn muốn hỏi gì?</div>'; });
+/* topic suggestions */
+$('sug-btn').addEventListener('click', async ()=>{ if(!sample) return; const sid=$('t-site').value; if(!sid){ $('sug-msg').textContent='Chưa có web.'; return; }
+  const s=S.sites.find(x=>x.id===sid); $('sug-btn').disabled=true; $('sug-msg').textContent='Claude đang nghĩ chủ đề…'; $('sug-list').innerHTML='';
+  const have=[...S.posts.filter(p=>p.siteId===sid).map(p=>p.title),...S.topics.filter(t=>t.siteId===sid).map(t=>t.text)];
+  try{ const arr=await sample.json(`Gợi ý 6 chủ đề bài viết MỚI cho web ${s.domain} (${s.name}) dành cho người lao động Việt Nam: lương, BHXH, BHYT, thuế TNCN, quyền lợi theo Bộ luật Lao động. Ưu tiên chủ đề người ta hay tìm trên Google vào thời điểm này (hôm nay là ${new Intl.DateTimeFormat('vi-VN',{timeZone:TZ,dateStyle:'long'}).format(new Date())}), có thể viết chính xác dựa trên luật hiện hành. KHÔNG trùng với các bài/chủ đề đã có:\n- ${have.join('\n- ')}\n\nChỉ trả về một mảng JSON, ví dụ: [{"chuDe":"Nghỉ việc riêng có lương khi kết hôn","lyDo":"Nhiều người cưới cuối năm, hay tìm"}]`,{cache:false});
+    const list=(Array.isArray(arr)?arr:[]).filter(x=>x&&x.chuDe).slice(0,8);
+    $('sug-msg').textContent=list.length?'Bấm “+ Thêm” để đưa vào hàng chờ:':'Claude chưa gợi ý được, thử lại.';
+    $('sug-list').innerHTML=list.map((x,i)=>`<div class="sug"><span class="x">${esc(x.chuDe)}<span class="why">${esc(x.lyDo||'')}</span></span><button class="btn sm" data-sug="${i}">+ Thêm</button></div>`).join('');
+    $('sug-list').onclick=async ev=>{ const b=ev.target.closest('[data-sug]'); if(!b) return; const x=list[+b.dataset.sug]; b.disabled=true;
+      try{ await db.collection('topics').add({siteId:sid,text:String(x.chuDe),status:'cho',createdAt:new Date().toISOString()}); b.textContent='✓ Đã thêm'; }catch(e){ b.disabled=false; toast('Không thêm được'); } }; }
+  catch(e){ $('sug-msg').textContent=sampleErr(e); }
+  finally{ $('sug-btn').disabled=false; } });
+
+/* add site */
+$('f-days').innerHTML=DAYN.map((n,i)=>`<label><input type="checkbox" value="${i}" ${[1,3,5].includes(i)?'checked':''}>${n}</label>`).join('');
+$('f-mode').addEventListener('change', ()=>{ $('f-sched').hidden = $('f-mode').value!=='new'; });
+function sitePrompt(domain, repo){ const [o,r]=repo.split('/');
+  return `Bạn là người viết nội dung tự động cho web https://${domain}. Nhiệm vụ lần chạy này: viết và đăng ĐÚNG 1 bài mới, rồi báo cáo ngắn bằng tiếng Việt.\n\n1. Đảm bảo có kho GitHub ${repo} trong phiên với quyền push (nếu chưa có, dùng công cụ add_repo với owner "${o}", repo "${r}", access "push", rồi clone theo hướng dẫn công cụ trả về). Vào thư mục kho và chạy \`git pull --rebase origin main\`.\n2. Đọc kỹ tệp CLAUDE.md ở gốc kho và làm theo đúng quy trình viết một bài mới trong đó (chọn chủ đề, nghiên cứu căn cứ chính xác, viết, build, kiểm tra, cập nhật danh sách chủ đề, commit và \`git push origin main\`).\n3. Quy tắc bắt buộc: không bịa số liệu; chủ đề không đủ căn cứ thì bỏ qua và chọn chủ đề kế tiếp (tối đa 3 lần thử); không push khi kiểm tra còn lỗi; không sửa bài cũ, không thêm quảng cáo.\n4. Kết thúc bằng báo cáo ngắn tiếng Việt: tiêu đề bài, đường link, căn cứ đã đối chiếu, điểm còn chưa chắc chắn. Nếu không đăng được bài nào, nói rõ lý do.`; }
+$('add-form').addEventListener('submit', async ev => { ev.preventDefault(); const msg=$('add-msg'); msg.className=''; msg.textContent='';
+  const name=$('f-name').value.trim(); let domain=$('f-domain').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,''); const repo=$('f-repo').value.trim().replace(/^https?:\/\/github\.com\//,'').replace(/\.git$/,'').replace(/\/$/,'');
+  if(!name||!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(domain)){ msg.className='msg err'; msg.textContent='Nhập tên web và tên miền hợp lệ, ví dụ vidu.com'; return; }
+  if(repo && !/^[\w.-]+\/[\w.-]+$/.test(repo)){ msg.className='msg err'; msg.textContent='Kho GitHub phải có dạng chủ/kho, ví dụ nghiepvuquang/ten-kho'; return; }
+  const id=domain.replace(/[^a-z0-9-]/g,'-'); if(S.sites.some(s=>s.id===id)){ msg.className='msg err'; msg.textContent='Web này đã có trong danh sách.'; return; }
+  const doc={name, domain, repo, netlify:$('f-netlify').value.trim(), ga:$('f-ga').value.trim(), triggerIds:[], createdAt:new Date().toISOString()};
+  if($('f-mode').value==='new'){
+    if(!repo){ msg.className='msg err'; msg.textContent='Cần có kho GitHub để tạo tác vụ viết bài.'; return; }
+    const days=[...$('f-days').querySelectorAll('input:checked')].map(x=>+x.value); if(!days.length){ msg.className='msg err'; msg.textContent='Chọn ít nhất một ngày viết bài.'; return; }
+    msg.className='msg info'; msg.textContent='Đang tạo tác vụ…';
+    try{ const p=await call('create_trigger',{name:`Viết bài mới ${name}`, cron_expression:buildCron(days,$('f-time').value||'05:52'), initiation:'human_request', notifications:{push:true}, prompt:sitePrompt(domain,repo)});
+      const tid=(p&&p.trigger&&p.trigger.id)||(p&&p.id); if(tid) doc.triggerIds=[tid]; }
+    catch(e){ msg.className='msg err'; msg.textContent=mcpErrText(e)+' Web vẫn được thêm; bạn có thể nhắn Claude: “Tạo tác vụ viết bài tự động cho '+domain+'”, rồi dùng nút Gắn tác vụ.'; }
+  }
+  try{ await db.doc('sites/'+id).set(doc); if(!msg.textContent||msg.className==='msg info'){ msg.className='msg ok'; msg.textContent='Đã thêm '+domain+'.'; } $('add-form').reset(); $('f-sched').hidden=true; loadTriggers(); }
+  catch(e){ msg.className='msg err'; msg.textContent='Không lưu được web ('+(e.code||'lỗi')+').'; }
+});
+
+/* ---------- boot ---------- */
+async function boot(){
+  renderCalendar();
+  if(!window.claude || typeof window.claude.use!=='function'){ $('main').hidden=true; $('gate').hidden=false; $('who').innerHTML='<span class="pill p-pause">Chưa kết nối Claude</span>';
+    $('gate').innerHTML='<div class="panel gate"><h1>Hãy mở app qua claude.ai</h1><p>Bản này đang được mở trực tiếp trên máy, nên không kết nối được với Claude, tác vụ theo lịch và dữ liệu của bạn.</p><p>Mở đường link dưới đây (đăng nhập claude.ai bằng tài khoản của bạn) để dùng đầy đủ:</p><p><a href="https://claude.ai/artifact/Rvju7EjtWk7zTfZX9mHCvN" target="_blank" rel="noopener"><b>Mở Trạm Quản Trị Web trên claude.ai ↗</b></a></p></div>'; return; }
+  const user = await claude.use('user');
+  const me = user ? await user.me() : null; const owner = user ? await user.isOwner() : false;
+  if(!owner){ $('main').hidden=true; $('gate').hidden=false; $('who').innerHTML='<span class="pill p-bad">Không có quyền</span>';
+    $('gate').innerHTML=`<div class="panel gate"><h1>Khu vực dành cho chủ sở hữu</h1><p>App này chỉ hoạt động khi bạn mở bằng <b>tài khoản Claude đã tạo ra nó</b> và đang đăng nhập claude.ai.</p><p>Nếu bạn là chủ sở hữu, hãy đăng nhập claude.ai rồi mở lại đường link này. Người khác dù có link cũng không xem hay thay đổi được dữ liệu.</p></div>`; return; }
+  $('who').innerHTML=`<img src="${esc(me.avatarUrl)}" alt=""><span>${esc(me.name||'Chủ sở hữu')}</span><span class="pill p-run">Đã đăng nhập · chủ sở hữu</span>`;
+  [db, mcp] = await Promise.all([claude.use('db'), claude.use('mcp')]);
+  renderAll();
+  if(db){
+    db.collection('sites').onSnapshot(q=>{ S.sites=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.createdAt||'').localeCompare(b.createdAt||'')); renderAll(); }, e=>toast('Lỗi tải web: '+e.code));
+    db.collection('posts').orderBy('date','desc').limit(1000).onSnapshot(q=>{ S.posts=q.docs.map(d=>({id:d.id,...d.data()})); renderAll(); }, e=>toast('Lỗi tải bài viết: '+e.code));
+    db.collection('topics').limit(500).onSnapshot(q=>{ S.topics=q.docs.map(d=>({id:d.id,...d.data()})); renderTopics(); }, e=>toast('Lỗi tải chủ đề: '+e.code));
+  }
+  if(mcp) loadTriggers();
+  sample = await claude.use('sample');
+  if(sample){ try{ const lim=await sample.limits(); toolsOK=!!(lim&&lim.tools); }catch(_){ toolsOK=false; } }
+  else { $('tro-ly').querySelector('.ai').innerHTML='<div class="empty">Trợ lý Claude chỉ dùng được khi mở app trong claude.ai.</div>'; $('sug-btn').disabled=true; }
+}
+boot();
+})();
+</script>
+</body></html>
