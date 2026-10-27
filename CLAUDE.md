@@ -64,6 +64,9 @@ Mỗi lần chạy **viết đúng 1 bài**.
    - `set` collection `posts`, doc_id = `<slug>`, data `{"siteId":"thuviennguoilaodong-com","title":<tiêu đề>,"url":"https://thuviennguoilaodong.com/bai-viet/<slug>/","date":<YYYY-MM-DD>,"cat":<cat>,"source":"auto"}`.
    - Nếu chủ đề lấy từ hàng chờ app (bước 2b) hoặc do app giao (2a, có bản ghi `topics` trạng thái `da-giao` trùng nội dung): `update` bản ghi đó thành `{"status":"da-viet","url":<link bài>,"updatedAt":<ISO time>}` (nhớ truyền `if_version` đã đọc).
    - Nếu chủ đề bị tạm hoãn vì thiếu căn cứ: `update` thành `{"status":"tam-hoan","note":<lý do>}`.
+   - **Báo cho chủ web trong app**: `set` collection `events`, doc_id = `post-<slug>`, data `{"type":"post","title":"Bài mới: <tiêu đề>","detail":"thuviennguoilaodong.com · đăng <DD/MM/YYYY> · Nhớ gửi yêu cầu lập chỉ mục Google.","url":<link bài>,"siteId":"thuviennguoilaodong-com","read":false,"createdAt":<ISO time>}`.
+   - Nếu lần chạy không đăng được bài (thiếu căn cứ, check.py lỗi, push lỗi…): `set` collection `events`, doc_id = `warn-<YYYYMMDDHHmm>`, `type` `"warn"`, `title` ngắn nêu vấn đề, `detail` lý do và việc chủ web cần làm.
+   - Nếu phát hiện văn bản pháp luật mới làm thay đổi số liệu chuẩn: thêm một `events` `type` `"warn"` để chủ web biết.
 10. Báo cáo cuối (tiếng Việt, ngắn): tiêu đề, đường link `https://thuviennguoilaodong.com/bai-viet/<slug>/`, các căn cứ pháp lý đã đối chiếu, điểm nào còn chưa chắc chắn (nếu có).
 
 ## Không được làm
