@@ -232,17 +232,47 @@ section.view.on{display:block}
 .feed .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .ix{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .quota{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);font-size:.86rem;color:var(--ink-2)}
+
+/* sidebar layout */
+.top-in{max-width:1360px}
+.shell{max-width:1360px;margin:0 auto;display:grid;grid-template-columns:216px minmax(0,1fr);gap:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.shell>.wrap{max-width:none;margin:0;padding-left:0;padding-right:0}
+.sidenav{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;max-height:calc(100vh - 96px);overflow-y:auto;padding-block:20px 20px;scrollbar-width:thin}
+.sidenav .nav{flex-direction:column;gap:2px;overflow:visible}
+.sidenav .nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;font-size:.92rem}
+.sidenav .nav a svg{width:18px;height:18px;flex:none;opacity:.8}
+.sidenav .nav a .lb{flex:1}
+.sidenav .nav a .cnt{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--bad);color:#fff;font-size:.72rem;font-weight:800;display:grid;place-items:center}
+.sidenav .nav a.on .cnt{background:var(--bg);color:var(--ink)}
+.sidenav .nav a[data-view="them-web"]{margin-top:10px;border:1px dashed var(--line-2)}
+@media(max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:0}
+  .sidenav{position:static;z-index:8;background:var(--bg);max-height:none;overflow:visible;padding-block:8px;border-bottom:1px solid var(--line);margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+  .sidenav .nav{flex-direction:row;overflow-x:auto;scrollbar-width:none}
+  .sidenav .nav a{padding:7px 11px;font-size:.86rem;white-space:nowrap}
+  .sidenav .nav a[data-view="them-web"]{margin-top:0}
+}
+/* feed groups */
+.fgroup{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);cursor:pointer;background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;font:inherit;color:inherit}
+.fgroup:last-child{border-bottom:none}
+.fgroup:hover{background:var(--panel-2)}
+.fgroup .av{width:38px;height:38px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;font-family:var(--f-mono);font-size:.8rem}
+.fgroup .nm{font-weight:800}
+.fgroup .lt{font-size:.84rem;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fgroup .rt{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.fgroup .badge{min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--bad);color:#fff;font-size:.75rem;font-weight:800;display:grid;place-items:center}
+.fgroup .badge.z{background:var(--panel-2);color:var(--ink-3)}
 </style>
 
 <header class="top"><div class="top-in">
   <div class="logo"><div class="logo-mark">QT</div>Trạm Quản Trị Web</div>
-  <nav class="nav" aria-label="Mục">
-    <a href="#web" data-view="web">Web</a><a href="#lich" data-view="lich">Lịch đăng</a><a href="#chu-de" data-view="chu-de">Chủ đề</a><a href="#bai-viet" data-view="bai-viet">Bài viết</a><a href="#tac-vu" data-view="tac-vu">Tác vụ</a><a href="#thong-bao" data-view="thong-bao">Thông báo</a><a href="#tro-ly" data-view="tro-ly">Trợ lý</a><a href="#them-web" data-view="them-web">Thêm web</a>
-  </nav>
+  <span style="flex:1"></span>
   <button class="bell" id="bell" type="button" aria-label="Thông báo" data-goto="thong-bao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="n" id="bell-n" hidden></span></button>
   <div class="who" id="who"><span class="pill p-off">Đang kiểm tra đăng nhập…</span></div>
 </div></header>
 
+<div class="shell">
+<aside class="sidenav"><nav class="nav" aria-label="Mục"><a href="#web" data-view="web"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="lb">Web</span><span class="cnt" hidden></span></a><a href="#lich" data-view="lich"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="lb">Lịch đăng</span><span class="cnt" hidden></span></a><a href="#chu-de" data-view="chu-de"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/></svg><span class="lb">Chủ đề</span><span class="cnt" hidden></span></a><a href="#bai-viet" data-view="bai-viet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg><span class="lb">Bài viết</span><span class="cnt" hidden></span></a><a href="#thong-bao" data-view="thong-bao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="lb">Thông báo</span><span class="cnt" hidden></span></a><a href="#tac-vu" data-view="tac-vu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lb">Tác vụ</span><span class="cnt" hidden></span></a><a href="#tro-ly" data-view="tro-ly"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/></svg><span class="lb">Trợ lý Claude</span><span class="cnt" hidden></span></a><a href="#them-web" data-view="them-web"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span class="lb">Thêm web</span><span class="cnt" hidden></span></a></nav></aside>
 <main class="wrap" id="app">
   <div id="gate" hidden></div>
   <div id="main">
@@ -295,9 +325,8 @@ section.view.on{display:block}
     </section>
 
     <section id="thong-bao" class="view">
-      <div class="sh"><div><h2>Thông báo</h2><p>Mỗi khi có bài mới được đăng, tác vụ chạy xong, gặp lỗi hoặc có việc cần bạn làm, app sẽ báo ở đây. Điện thoại của bạn cũng nhận thông báo khi tác vụ chạy xong.</p></div>
-      <button class="btn" id="read-all">✓ Đánh dấu đã đọc hết</button></div>
-      <div class="panel"><ul class="feed" id="feed"><li><span></span><span class="muted">Đang tải…</span></li></ul></div>
+      <div class="sh" id="feed-head"><div><h2>Thông báo</h2></div></div>
+      <div class="panel" id="feed"><div class="empty">Đang tải…</div></div>
     </section>
 
     <section id="bai-viet" class="view">
@@ -333,6 +362,7 @@ section.view.on{display:block}
     </section>
   </div>
 </main>
+</div>
 
 <div class="modal-bg" id="modal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-t"><h3 id="m-t"></h3><p id="m-p"></p><div class="row"><button class="btn" id="m-no">Hủy</button><button class="btn pri" id="m-yes">Đồng ý</button></div></div></div>
 <div class="toast" id="toast" role="status"></div>
@@ -518,17 +548,29 @@ const todayVN=()=>{ const v=vnParts(new Date()); return `${v.year}-${v.month}-${
 function renderPosts(){ const f=$('p-filter'); const cur=f.value; f.innerHTML='<option value="">Tất cả web</option>'+S.sites.map(s=>`<option value="${esc(s.id)}">${esc(s.domain)}</option>`).join(''); f.value=cur;
   const rows=S.posts.filter(p=>!cur||p.siteId===cur);
   const td=todayVN(); const usedToday=S.posts.filter(p=>p.indexReq&&p.indexReq.slice(0,10)===td).length; const pending=S.posts.filter(p=>!p.indexReq&&!p.indexed).length;
-  $('quota').innerHTML=`<span><b>Lập chỉ mục Google:</b> còn <b class="mono">${pending}</b> bài chưa gửi yêu cầu · hôm nay đã gửi <b class="mono">${usedToday}</b>/10</span><span class="hint">Bấm “Gửi yêu cầu”: app chép sẵn đường link và mở Search Console, bạn dán vào ô tìm kiếm trên cùng rồi bấm YÊU CẦU LẬP CHỈ MỤC.</span>`;
+  $('quota').innerHTML=`<span><b>Lập chỉ mục Google:</b> còn <b class="mono">${pending}</b> bài chưa gửi yêu cầu · hôm nay đã gửi <b class="mono">${usedToday}</b>/10</span><span class="hint">Sau khi gửi yêu cầu trên Search Console, bấm “Đã gửi yêu cầu” ở bài đó. Khi bài đã lên Google, bấm “✓ Đã lên Google”.</span>`;
   $('posts').innerHTML=rows.length?rows.map(p=>{ const st=p.indexed?'<span class="pill p-run">Đã có trên Google</span>':p.indexReq?`<span class="pill p-info">Đã gửi ${fmtDate(p.indexReq)}</span>`:'<span class="pill p-pause">Chưa gửi</span>';
     const s=S.sites.find(x=>x.id===p.siteId);
     return `<tr data-post="${esc(p.id)}"><td class="t mono">${fmtDate(p.date)}</td><td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></td><td class="t">${esc(siteName(p.siteId))}</td><td class="t">${p.source==='auto'?'<span class="pill p-run">Tự động</span>':'<span class="pill p-off">Viết tay</span>'}</td>
-    <td><div class="ix">${st}${!p.indexed&&s?`<a class="btn sm" data-ix="send" href="${esc(scInspect(s.domain))}" target="_blank" rel="noopener">Gửi yêu cầu ↗</a>`:''}${!p.indexed?`<button class="btn sm ghost" data-ix="done" title="Đánh dấu Google đã lập chỉ mục">✓ Đã lên Google</button>`:''}</div></td></tr>`; }).join(''):'<tr><td colspan="5" class="empty">Chưa có bài viết nào được ghi lại.</td></tr>'; }
+    <td><div class="ix">${st}${!p.indexed&&!p.indexReq?`<button class="btn sm" data-ix="send">Đã gửi yêu cầu</button>`:''}${p.indexReq&&!p.indexed?`<button class="btn sm ghost" data-ix="undo" title="Hoàn tác">↺</button>`:''}${!p.indexed?`<button class="btn sm ghost" data-ix="done" title="Đánh dấu Google đã lập chỉ mục">✓ Đã lên Google</button>`:''}</div></td></tr>`; }).join(''):'<tr><td colspan="5" class="empty">Chưa có bài viết nào được ghi lại.</td></tr>'; }
 /* ---------- thông báo ---------- */
 const EV_IC={post:['post','✎'],run:['run','▶'],warn:['warn','!'],err:['err','✕'],index:['run','G'],info:['run','i']};
-function renderFeed(){ const list=[...S.events].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,200); const unread=list.filter(e=>!e.read).length;
+function renderFeed(){ const all=[...S.events].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,300); const unread=all.filter(e=>!e.read).length;
   const n=$('bell-n'); n.hidden=!unread; n.textContent=unread>99?'99+':unread; $('bell').setAttribute('aria-label',`Thông báo${unread?' – '+unread+' chưa đọc':''}`);
-  const nav=document.querySelector('.nav a[data-view="thong-bao"]'); if(nav) nav.textContent=unread?`Thông báo (${unread})`:'Thông báo';
-  $('feed').innerHTML=list.length?list.map(e=>{ const [c,i]=EV_IC[e.type]||EV_IC.info; return `<li class="${e.read?'':'unread'}" data-ev="${esc(e.id)}"><span class="ic ${c}">${i}</span><div><div class="t">${esc(e.title)}</div>${e.detail?`<div class="d">${esc(e.detail)}</div>`:''}<div class="acts">${e.url?`<a class="btn sm" href="${esc(e.url)}" target="_blank" rel="noopener">Mở ↗</a>`:''}${e.report?`<a class="btn sm" href="${esc(e.report)}" target="_blank" rel="noopener">Xem báo cáo ↗</a>`:''}${e.type==='post'&&e.url?`<button class="btn sm" data-goto="bai-viet">Gửi lập chỉ mục ›</button>`:''}${!e.read?`<button class="btn sm ghost" data-evread>Đã đọc</button>`:''}</div></div><span class="w">${fmtVN(e.createdAt)}</span></li>`; }).join(''):'<li><span></span><span class="muted">Chưa có thông báo nào. Khi tác vụ đăng bài mới, thông báo sẽ hiện ở đây.</span></li>'; }
+  const c=document.querySelector('.nav a[data-view="thong-bao"] .cnt'); if(c){ c.hidden=!unread; c.textContent=unread>99?'99+':unread; }
+  const gid=e=>S.sites.some(s=>s.id===e.siteId)?e.siteId:'_chung';
+  const head=$('feed-head'), box=$('feed');
+  if(!S.feedSite){
+    const groups={}; all.forEach(e=>{ (groups[gid(e)]=groups[gid(e)]||[]).push(e); });
+    const order=Object.keys(groups).sort((x,y)=>{ const ux=groups[x].filter(e=>!e.read).length, uy=groups[y].filter(e=>!e.read).length; if(!!uy!==!!ux) return uy?1:-1; return (groups[y][0].createdAt||'').localeCompare(groups[x][0].createdAt||''); });
+    head.innerHTML=`<div><h2>Thông báo</h2><p>Web nào có thông báo mới hiện lên trước. Bấm vào một web để xem chi tiết thông báo của web đó.</p></div><button class="btn" id="read-all">✓ Đánh dấu đã đọc hết</button>`;
+    box.innerHTML=order.length?order.map(k=>{ const g=groups[k]; const s=S.sites.find(x=>x.id===k); const u=g.filter(e=>!e.read).length; const nm=s?s.name:'Thông báo chung'; const init=(s?s.domain:'TB').slice(0,2).toUpperCase();
+      return `<button class="fgroup" data-fgroup="${esc(k)}"><span class="av">${esc(init)}</span><span style="min-width:0"><span class="nm">${esc(nm)}</span>${s?` <span class="hint mono">${esc(s.domain)}</span>`:''}<span class="lt" style="display:block">${esc(g[0].title)}</span></span><span class="rt"><span class="badge ${u?'':'z'}">${u||g.length}</span><span class="w mono hint">${fmtVN(g[0].createdAt)}</span></span></button>`; }).join(''):'<div class="empty">Chưa có thông báo nào. Khi tác vụ đăng bài mới, thông báo sẽ hiện ở đây.</div>';
+  } else {
+    const s=S.sites.find(x=>x.id===S.feedSite); const list=all.filter(e=>gid(e)===S.feedSite); const u=list.filter(e=>!e.read).length;
+    head.innerHTML=`<div><button class="back" data-fback>← Tất cả web</button><h2>${esc(s?s.name:'Thông báo chung')}</h2><p>${s?esc(s.domain)+' · ':''}${list.length} thông báo${u?`, ${u} chưa đọc`:''}</p></div>${u?'<button class="btn" id="read-site">✓ Đã đọc hết web này</button>':''}`;
+    box.innerHTML=list.length?'<ul class="feed">'+list.map(e=>{ const [c,i]=EV_IC[e.type]||EV_IC.info; return `<li class="${e.read?'':'unread'}" data-ev="${esc(e.id)}"><span class="ic ${c}">${i}</span><div><div class="t">${esc(e.title)}</div>${e.detail?`<div class="d">${esc(e.detail)}</div>`:''}<div class="acts">${e.url?`<a class="btn sm" href="${esc(e.url)}" target="_blank" rel="noopener">Mở ↗</a>`:''}${e.report?`<a class="btn sm" href="${esc(e.report)}" target="_blank" rel="noopener">Xem báo cáo ↗</a>`:''}${e.type==='post'&&e.url?`<button class="btn sm" data-goto="bai-viet">Đánh dấu lập chỉ mục ›</button>`:''}${!e.read?`<button class="btn sm ghost" data-evread>Đã đọc</button>`:''}</div></div><span class="w">${fmtVN(e.createdAt)}</span></li>`; }).join('')+'</ul>':'<div class="empty">Không có thông báo.</div>';
+  } }
 async function addEvent(id, data){ if(!db||S.events.some(e=>e.id===id)) return; try{ const ref=db.doc('events/'+id); const ex=await ref.get(); if(ex.exists) return; await ref.set({read:false,createdAt:new Date().toISOString(),...data}); if(S.evReady) toast('🔔 '+data.title); }catch(_){} }
 function detectEvents(){ if(!S.evReady||!db) return;
   (S.triggers||[]).forEach(t=>{ const lr=t.last_run; if(!lr||!lr.fired_at) return; const st=(lr.status||'').replace('ROUTINE_RUN_STATUS_',''); if(!['SUCCEEDED','FAILED'].includes(st)) return;
@@ -539,10 +581,15 @@ function detectEvents(){ if(!S.evReady||!db) return;
 document.addEventListener('click', async ev=>{
   const r=ev.target.closest('[data-evread]'); if(r){ const id=r.closest('[data-ev]').dataset.ev; try{ await db.doc('events/'+id).update({read:true}); }catch(_){} return; }
   const ix=ev.target.closest('[data-ix]'); if(ix){ const id=ix.closest('[data-post]').dataset.post; const p=S.posts.find(x=>x.id===id); if(!p) return;
-    if(ix.dataset.ix==='send'){ try{ navigator.clipboard.writeText(p.url).then(()=>toast('Đã chép link bài. Dán vào ô tìm kiếm trên cùng của Search Console.')).catch(()=>toast('Chép link: '+p.url)); }catch(_){ toast('Chép link: '+p.url); }
-      try{ await db.doc('posts/'+id).update({indexReq:new Date(Date.now()+7*3600e3).toISOString()}); }catch(_){} }
+    if(ix.dataset.ix==='send'){ try{ await db.doc('posts/'+id).update({indexReq:new Date(Date.now()+7*3600e3).toISOString()}); toast('Đã chuyển sang “Đã gửi”'); }catch(_){ toast('Không lưu được'); } }
+    else if(ix.dataset.ix==='undo'){ try{ await db.doc('posts/'+id).update({indexReq:''}); toast('Đã hoàn tác'); }catch(_){} }
     else { try{ await db.doc('posts/'+id).update({indexed:true}); toast('Đã đánh dấu bài đã lên Google'); }catch(_){} } } });
-$('read-all').addEventListener('click', async ()=>{ const un=S.events.filter(e=>!e.read); for(const e of un){ try{ await db.doc('events/'+e.id).update({read:true}); }catch(_){} } toast('Đã đánh dấu đã đọc'); });
+async function markRead(list){ for(const e of list){ try{ await db.doc('events/'+e.id).update({read:true}); }catch(_){} } }
+document.addEventListener('click', async ev=>{
+  const fg=ev.target.closest('[data-fgroup]'); if(fg){ S.feedSite=fg.dataset.fgroup; renderFeed(); window.scrollTo({top:0}); return; }
+  if(ev.target.closest('[data-fback]')){ S.feedSite=null; renderFeed(); return; }
+  if(ev.target.closest('#read-all')){ await markRead(S.events.filter(e=>!e.read)); toast('Đã đánh dấu đã đọc'); return; }
+  if(ev.target.closest('#read-site')){ const gid=e=>S.sites.some(s=>s.id===e.siteId)?e.siteId:'_chung'; await markRead(S.events.filter(e=>!e.read&&gid(e)===S.feedSite)); toast('Đã đánh dấu đã đọc'); return; } });
 function renderTasks(){ const tb=$('tasks');
   if(S.triggers===null){ tb.innerHTML=`<tr><td colspan="5" class="empty">${esc(S.trigErr?mcpErrText(S.trigErr):'Đang tải…')}</td></tr>`; return; }
   const list=S.triggers.filter(t=>t.cron_expression||t.enabled);
@@ -551,7 +598,7 @@ function renderTasks(){ const tb=$('tasks');
 function renderAll(){ renderBanners(); renderStrip(); renderSites(); renderCalendar(); renderTopics(); renderPosts(); renderTasks(); if(S.view==='chi-tiet') renderDetail(); }
 /* ---------- tabs ---------- */
 const VIEWS=['web','chi-tiet','lich','chu-de','bai-viet','thong-bao','tac-vu','tro-ly','them-web'];
-function go(view, site, push=true){ if(!VIEWS.includes(view)) view='web'; S.view=view; S.site=site||null;
+function go(view, site, push=true){ if(!VIEWS.includes(view)) view='web'; if(view==='thong-bao'&&S.view!=='thong-bao'){ S.feedSite=null; renderFeed(); } S.view=view; S.site=site||null;
   document.querySelectorAll('section.view').forEach(x=>x.classList.toggle('on', x.id===view));
   document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('on', a.dataset.view===(view==='chi-tiet'?'web':view)));
   $('strip').hidden = !(view==='web'||view==='tro-ly');
