@@ -5,7 +5,6 @@ Chủ đề nào không đủ căn cứ pháp luật chắc chắn thì chuyển
 Người dùng có thể thêm chủ đề mới vào đầu danh sách bất cứ lúc nào.
 
 ## Chờ viết
-- [ ] Tiền lương ngừng việc (BLLĐ Điều 99)
 - [ ] Công ty được khấu trừ lương trong trường hợp nào? (BLLĐ Điều 102)
 - [ ] Thời giờ làm việc bình thường: 8 giờ/ngày, 48 giờ/tuần (BLLĐ Điều 105)
 - [ ] Nghỉ giữa giờ, nghỉ chuyển ca, nghỉ hằng tuần (BLLĐ Điều 109, 110, 111)
@@ -36,5 +35,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 (20 bài đầu viết ngày 26/10/2026 – xem thư mục tools/articles.py và tools/articles2.py)
 - [x] 2026-10-26 – Lương tháng 13, thưởng Tết có bắt buộc không? Thuế TNCN với tiền thưởng (/bai-viet/luong-thang-13-thuong-tet/)
 - [x] 2026-10-26 – Công ty trả lương chậm, nợ lương: người lao động có quyền gì? (/bai-viet/tra-luong-cham-no-luong/)
+- [x] 2026-10-27 – Tiền lương ngừng việc 2026: được trả bao nhiêu khi công ty tạm dừng? (/bai-viet/tien-luong-ngung-viec/)
 
 ## Tạm hoãn
