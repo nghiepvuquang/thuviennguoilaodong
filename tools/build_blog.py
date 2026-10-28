@@ -57,6 +57,7 @@ def head(title, desc, url, ld, og_type='article'):
 <meta property="og:type" content="{og_type}">
 <meta property="og:locale" content="vi_VN">
 <link rel="icon" href="{FAVICON}">
+<meta name="google-adsense-account" content="ca-pub-6036509094866269">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXWRGDZ79R"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-QXWRGDZ79R');</script>
 

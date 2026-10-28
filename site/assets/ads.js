@@ -10,7 +10,7 @@
  */
 window.TVNLD_ADS = {
   enabled: false,
-  client: '',
+  client: 'ca-pub-6036509094866269',
   slots: {
     'trang-chu-ket-qua': '',   // trang chủ: dưới kết quả tính lương
     'trang-chu-cuoi': '',      // mọi tab trang chủ: trên khung "Bài viết hữu ích"
