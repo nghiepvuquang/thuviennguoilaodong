@@ -48,7 +48,7 @@ Mỗi lần chạy **viết đúng 1 bài**.
 4. **Viết bài** vào `content/bai-viet/<slug>.json` theo mẫu `tools/example_article.json`:
    - `slug`: chữ thường không dấu, nối bằng gạch ngang, không trùng.
    - `cat`: một trong `luong`, `thue`, `bh`, `lv`.
-   - `date`: ngày hôm nay theo giờ Việt Nam (YYYY-MM-DD).
+   - `date`: ngày hôm nay theo giờ Việt Nam (YYYY-MM-DD) – lấy bằng lệnh `TZ=Asia/Ho_Chi_Minh date +%F` (máy chạy giờ UTC nên `date` thường sẽ lệch 1 ngày vào buổi sáng).
    - `title` (55–75 ký tự, có từ khóa người ta hay tìm), `desc` (140–170 ký tự), `lead` (2–3 câu).
    - `keys`: 3 ý chính. `laws`: danh sách căn cứ, có thể chứa liên kết tới trang tra cứu nguyên văn `<a href="/#ma-muc">…</a>` – chỉ dùng mã mục có thật (check.py sẽ báo nếu sai).
    - `body`: HTML, 900–1.600 chữ, mỗi `<h2>` có `id` (mục lục tự sinh). Dùng các khối có sẵn: `<div class="tbl"><table>…</table></div>` (bảng > 3 cột thêm `class="w"` cho `<table>`), `<div class="calc">` (ví dụ tính), `<div class="note">` (lưu ý), `<div class="tip">`, và khối kêu gọi dùng công cụ `<div class="cta">…</div>` (chép từ bài mẫu).
