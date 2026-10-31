@@ -5,7 +5,6 @@ Chủ đề nào không đủ căn cứ pháp luật chắc chắn thì chuyển
 Người dùng có thể thêm chủ đề mới vào đầu danh sách bất cứ lúc nào.
 
 ## Chờ viết
-- [ ] Nghỉ việc riêng có hưởng lương: kết hôn, tang lễ (BLLĐ Điều 115)
 - [ ] Công ty đơn phương chấm dứt hợp đồng: khi nào đúng luật? (BLLĐ Điều 36, 41)
 - [ ] Kỷ luật sa thải: các trường hợp và trình tự (BLLĐ Điều 124, 125, 122)
 - [ ] Tạm hoãn hợp đồng lao động (BLLĐ Điều 30, 31)
@@ -36,5 +35,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-10-29 – Công ty được khấu trừ lương khi nào? Mức trừ tối đa 30% và cách tính (/bai-viet/khau-tru-tien-luong/)
 - [x] 2026-10-30 – Giờ làm việc bình thường: tối đa 8 giờ/ngày, 48 giờ/tuần theo luật (/bai-viet/thoi-gio-lam-viec-binh-thuong/)
 - [x] 2026-10-31 – Nghỉ giữa giờ, nghỉ chuyển ca, nghỉ hằng tuần: được nghỉ bao lâu? (/bai-viet/nghi-giua-gio-nghi-chuyen-ca-nghi-hang-tuan/)
+- [x] 2026-11-01 – Nghỉ việc riêng có hưởng lương: kết hôn, tang lễ được nghỉ mấy ngày? (/bai-viet/nghi-viec-rieng-co-huong-luong/)
 
 ## Tạm hoãn
