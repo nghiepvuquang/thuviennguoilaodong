@@ -1,6 +1,6 @@
 # Thư Viện Người Lao Động – hướng dẫn cho Claude
 
-Web tĩnh tại https://thuviennguoilaodong.com, chạy trên Netlify, **tự triển khai mỗi khi đẩy (push) lên nhánh `main`**. Thư mục được xuất bản là `site/` (xem `netlify.toml`). Không có bước build trên Netlify: mọi HTML trong `site/` phải được build sẵn và commit.
+Web tĩnh tại https://thuviennguoilaodong.com, chạy trên **GitHub Pages** (từ 11/2026, thay Netlify), **tự triển khai mỗi khi đẩy (push) lên nhánh `main`** qua GitHub Actions (`.github/workflows/pages.yml`). Thư mục được xuất bản là `site/`. Không có bước build: mọi HTML trong `site/` phải được build sẵn và commit. Không xóa `site/CNAME` (tên miền riêng) và `site/ads.txt`. Kho GitHub ở chế độ công khai: không bao giờ commit mật khẩu, khóa API hay thông tin cá nhân.
 
 Chủ web: Vũ Quang Nghiệp (người Việt, không phải lập trình viên). Mọi nội dung và báo cáo viết bằng **tiếng Việt**, dễ hiểu.
 
@@ -59,7 +59,7 @@ Mỗi lần chạy **viết đúng 1 bài**.
 5. `python3 tools/build_blog.py && python3 tools/check.py` – phải ra "OK". Sửa đến khi hết lỗi.
 6. Tự rà lại trước khi đăng: từng con số đã khớp nguyên văn luật? ngày hiệu lực đúng? ví dụ tính đúng? không mâu thuẫn với 20 bài cũ và trang chủ?
 7. Cập nhật `TOPICS.md`: chuyển chủ đề xuống "Đã viết" dạng `- [x] YYYY-MM-DD – <tiêu đề> (/bai-viet/<slug>/)`. Khi "Chờ viết" còn dưới 5 chủ đề, tự bổ sung 5 chủ đề mới hữu ích cho người lao động (không trùng).
-8. Commit tất cả (`content/`, `site/`, `TOPICS.md`, `tools/law_text.js` nếu có thêm) với thông điệp `Bài mới: <tiêu đề>` rồi `git push origin main`. Netlify tự cập nhật web sau khoảng 1 phút.
+8. Commit tất cả (`content/`, `site/`, `TOPICS.md`, `tools/law_text.js` nếu có thêm) với thông điệp `Bài mới: <tiêu đề>` rồi `git push origin main`. GitHub Pages tự cập nhật web sau khoảng 1–2 phút.
 9. Ghi vào app quản trị (chỉ khi phiên có công cụ `ArtifactData`; lỗi ở bước này không ảnh hưởng việc đăng bài):
    - `set` collection `posts`, doc_id = `<slug>`, data `{"siteId":"thuviennguoilaodong-com","title":<tiêu đề>,"url":"https://thuviennguoilaodong.com/bai-viet/<slug>/","date":<YYYY-MM-DD>,"cat":<cat>,"source":"auto"}`.
    - Nếu chủ đề lấy từ hàng chờ app (bước 2b) hoặc do app giao (2a, có bản ghi `topics` trạng thái `da-giao` trùng nội dung): `update` bản ghi đó thành `{"status":"da-viet","url":<link bài>,"updatedAt":<ISO time>}` (nhớ truyền `if_version` đã đọc).
