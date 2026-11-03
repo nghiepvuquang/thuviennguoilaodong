@@ -5,7 +5,6 @@ Chủ đề nào không đủ căn cứ pháp luật chắc chắn thì chuyển
 Người dùng có thể thêm chủ đề mới vào đầu danh sách bất cứ lúc nào.
 
 ## Chờ viết
-- [ ] Tạm hoãn hợp đồng lao động (BLLĐ Điều 30, 31)
 - [ ] Bảo vệ lao động nữ mang thai, nuôi con nhỏ (BLLĐ Điều 137, 138)
 - [ ] Nghỉ chăm con ốm hưởng BHXH (Luật BHXH 2024)
 - [ ] Nghỉ dưỡng sức, phục hồi sức khỏe sau sinh, sau ốm (Luật BHXH 2024)
@@ -36,5 +35,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-01 – Nghỉ việc riêng có hưởng lương: kết hôn, tang lễ được nghỉ mấy ngày? (/bai-viet/nghi-viec-rieng-co-huong-luong/)
 - [x] 2026-11-02 – Công ty đơn phương chấm dứt hợp đồng lao động: khi nào đúng luật? (/bai-viet/cong-ty-don-phuong-cham-dut-hop-dong/)
 - [x] 2026-11-03 – Kỷ luật sa thải: 4 trường hợp bị sa thải và trình tự đúng luật 2026 (/bai-viet/ky-luat-sa-thai/)
+- [x] 2026-11-04 – Tạm hoãn hợp đồng lao động: 8 trường hợp, quyền lợi và hạn quay lại (/bai-viet/tam-hoan-hop-dong-lao-dong/)
 
 ## Tạm hoãn
