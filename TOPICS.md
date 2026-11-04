@@ -5,7 +5,6 @@ Chủ đề nào không đủ căn cứ pháp luật chắc chắn thì chuyển
 Người dùng có thể thêm chủ đề mới vào đầu danh sách bất cứ lúc nào.
 
 ## Chờ viết
-- [ ] Bảo vệ lao động nữ mang thai, nuôi con nhỏ (BLLĐ Điều 137, 138)
 - [ ] Nghỉ chăm con ốm hưởng BHXH (Luật BHXH 2024)
 - [ ] Nghỉ dưỡng sức, phục hồi sức khỏe sau sinh, sau ốm (Luật BHXH 2024)
 - [ ] Khám thai, sẩy thai, nạo hút thai: được nghỉ bao nhiêu ngày (Luật BHXH 2024 Điều 51, 52)
@@ -36,5 +35,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-02 – Công ty đơn phương chấm dứt hợp đồng lao động: khi nào đúng luật? (/bai-viet/cong-ty-don-phuong-cham-dut-hop-dong/)
 - [x] 2026-11-03 – Kỷ luật sa thải: 4 trường hợp bị sa thải và trình tự đúng luật 2026 (/bai-viet/ky-luat-sa-thai/)
 - [x] 2026-11-04 – Tạm hoãn hợp đồng lao động: 8 trường hợp, quyền lợi và hạn quay lại (/bai-viet/tam-hoan-hop-dong-lao-dong/)
+- [x] 2026-11-05 – Lao động nữ mang thai, nuôi con nhỏ: 6 quyền được luật bảo vệ 2026 (/bai-viet/bao-ve-lao-dong-nu-mang-thai-nuoi-con-nho/)
 
 ## Tạm hoãn
