@@ -5,7 +5,6 @@ Chủ đề nào không đủ căn cứ pháp luật chắc chắn thì chuyển
 Người dùng có thể thêm chủ đề mới vào đầu danh sách bất cứ lúc nào.
 
 ## Chờ viết
-- [ ] Nghỉ dưỡng sức, phục hồi sức khỏe sau sinh, sau ốm (Luật BHXH 2024)
 - [ ] Khám thai, sẩy thai, nạo hút thai: được nghỉ bao nhiêu ngày (Luật BHXH 2024 Điều 51, 52)
 - [ ] Trợ cấp hằng tháng cho người đủ tuổi nhưng chưa đủ 15 năm đóng BHXH (Luật BHXH 2024 Điều 23)
 - [ ] BHXH tự nguyện 2026: ai tham gia, mức đóng, mức hỗ trợ
@@ -36,5 +35,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-04 – Tạm hoãn hợp đồng lao động: 8 trường hợp, quyền lợi và hạn quay lại (/bai-viet/tam-hoan-hop-dong-lao-dong/)
 - [x] 2026-11-05 – Lao động nữ mang thai, nuôi con nhỏ: 6 quyền được luật bảo vệ 2026 (/bai-viet/bao-ve-lao-dong-nu-mang-thai-nuoi-con-nho/)
 - [x] 2026-11-06 – Nghỉ chăm con ốm hưởng BHXH 2026: được mấy ngày, nhận bao nhiêu tiền? (/bai-viet/nghi-cham-con-om-huong-bhxh/)
+- [x] 2026-11-07 – Nghỉ dưỡng sức sau sinh, sau ốm 2026: được mấy ngày, nhận bao nhiêu? (/bai-viet/nghi-duong-suc-phuc-hoi-suc-khoe/)
 
 ## Tạm hoãn
