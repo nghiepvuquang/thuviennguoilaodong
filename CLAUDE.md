@@ -17,7 +17,8 @@ Chủ web: Vũ Quang Nghiệp (người Việt, không phải lập trình viên
 - `TOPICS.md` – danh sách chủ đề chờ viết / đã viết / tạm hoãn.
 
 ## Vị trí quảng cáo (mục tiêu của web là kiếm thu nhập từ quảng cáo)
-- Các vị trí đã chừa sẵn, đang ẩn: trang chủ `trang-chu-ket-qua`, `trang-chu-cuoi`; mỗi bài viết `bai-dau`, `bai-giua` (trước `<h2>` thứ 3), `bai-cuoi`, `bai-ben-phai`; trang danh sách `danh-sach`. Thẻ dạng `<div class="ad-slot" data-slot="..." hidden></div>`.
+- Từ 07/11/2026 mã AdSense đã BẬT (`enabled: true`, Quảng cáo tự động, client ca-pub-6036509094866269). Không tắt và không sửa `ads.js`, `ads.txt` trừ khi chủ web yêu cầu.
+- Các vị trí đã chừa sẵn, đang ẩn (chỉ hiện khi có mã đơn vị trong `slots`): trang chủ `trang-chu-ket-qua`, `trang-chu-cuoi`; mỗi bài viết `bai-dau`, `bai-giua` (trước `<h2>` thứ 3), `bai-cuoi`, `bai-ben-phai`; trang danh sách `danh-sach`. Thẻ dạng `<div class="ad-slot" data-slot="..." hidden></div>`.
 - Bật/tắt và mã quảng cáo nằm DUY NHẤT trong `site/assets/ads.js` (`enabled`, `client`, `slots`). Chỉ sửa tệp này khi chủ web yêu cầu (sau khi AdSense duyệt), kèm tạo `site/ads.txt`.
 - `tools/build_blog.py` tự chèn các vị trí vào mọi bài; `tools/check.py` báo lỗi nếu trang thiếu `/assets/ads.js` hoặc bài thiếu vị trí. Không xóa các vị trí này. Bài mới nên có ít nhất 3 thẻ `<h2>` để có vị trí giữa bài.
 - Trang mới thêm sau này (công cụ, trang chủ đề…) cũng phải chừa vị trí quảng cáo theo cách trên.
@@ -71,6 +72,6 @@ Mỗi lần chạy **viết đúng 1 bài**.
 
 ## Không được làm
 - Không xóa hay sửa nội dung bài cũ (trừ khi được yêu cầu), không đổi slug bài đã đăng.
-- Không sửa mã Google Analytics (G-QXWRGDZ79R). Không bật quảng cáo, không thêm mã AdSense khi chủ web chưa yêu cầu – nhưng luôn giữ các vị trí quảng cáo đã chừa sẵn.
+- Không sửa mã Google Analytics (G-QXWRGDZ79R). Không thay đổi cấu hình quảng cáo khi chủ web chưa yêu cầu – luôn giữ các vị trí quảng cáo đã chừa sẵn.
 - Không push nếu `tools/check.py` còn lỗi.
 - Không đăng quá 1 bài mỗi lần chạy.
