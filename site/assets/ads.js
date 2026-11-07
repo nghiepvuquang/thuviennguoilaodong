@@ -9,7 +9,7 @@
  *   4. tạo tệp site/ads.txt theo hướng dẫn của AdSense.
  */
 window.TVNLD_ADS = {
-  enabled: false,
+  enabled: true,   // bật từ 07/11/2026: Quảng cáo tự động của AdSense (chủ web yêu cầu)
   client: 'ca-pub-6036509094866269',
   slots: {
     'trang-chu-ket-qua': '',   // trang chủ: dưới kết quả tính lương
