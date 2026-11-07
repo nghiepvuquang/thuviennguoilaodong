@@ -36,5 +36,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-05 – Lao động nữ mang thai, nuôi con nhỏ: 6 quyền được luật bảo vệ 2026 (/bai-viet/bao-ve-lao-dong-nu-mang-thai-nuoi-con-nho/)
 - [x] 2026-11-06 – Nghỉ chăm con ốm hưởng BHXH 2026: được mấy ngày, nhận bao nhiêu tiền? (/bai-viet/nghi-cham-con-om-huong-bhxh/)
 - [x] 2026-11-07 – Nghỉ dưỡng sức sau sinh, sau ốm 2026: được mấy ngày, nhận bao nhiêu? (/bai-viet/nghi-duong-suc-phuc-hoi-suc-khoe/)
+- [x] 2026-11-08 – Cách tính lương tháng 13 khi vào làm giữa năm hoặc nghỉ việc trước Tết (/bai-viet/cach-tinh-luong-thang-13-theo-thang-lam-viec/)
 
 ## Tạm hoãn
