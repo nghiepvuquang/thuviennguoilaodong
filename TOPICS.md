@@ -37,5 +37,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-06 – Nghỉ chăm con ốm hưởng BHXH 2026: được mấy ngày, nhận bao nhiêu tiền? (/bai-viet/nghi-cham-con-om-huong-bhxh/)
 - [x] 2026-11-07 – Nghỉ dưỡng sức sau sinh, sau ốm 2026: được mấy ngày, nhận bao nhiêu? (/bai-viet/nghi-duong-suc-phuc-hoi-suc-khoe/)
 - [x] 2026-11-08 – Cách tính lương tháng 13 khi vào làm giữa năm hoặc nghỉ việc trước Tết (/bai-viet/cach-tinh-luong-thang-13-theo-thang-lam-viec/)
+- [x] 2026-11-10 – Thưởng Tết bằng hiện vật, quà Tết, phiếu mua hàng có chịu thuế TNCN? (/bai-viet/thuong-tet-bang-hien-vat-thue-tncn/)
 
 ## Tạm hoãn
