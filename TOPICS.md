@@ -19,7 +19,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [ ] Lao động chưa thành niên: được làm gì, thời giờ làm việc (BLLĐ Chương XI)
 - [ ] Đóng BHXH khi làm nhiều công ty cùng lúc
 - [ ] Nghỉ không lương: quyền lợi BHXH, BHYT ảnh hưởng thế nào
-- [ ] Lịch nghỉ Tết Âm lịch 2027 (chỉ viết khi đã có thông báo chính thức)
 
 ## Đã viết
 (20 bài đầu viết ngày 26/10/2026 – xem thư mục tools/articles.py và tools/articles2.py)
@@ -39,5 +38,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-08 – Cách tính lương tháng 13 khi vào làm giữa năm hoặc nghỉ việc trước Tết (/bai-viet/cach-tinh-luong-thang-13-theo-thang-lam-viec/)
 - [x] 2026-11-10 – Thưởng Tết bằng hiện vật, quà Tết, phiếu mua hàng có chịu thuế TNCN? (/bai-viet/thuong-tet-bang-hien-vat-thue-tncn/)
 - [x] 2026-11-12 – Quy chế thưởng Tết của công ty: cần ghi gì để đúng luật, tránh tranh chấp? (/bai-viet/quy-che-thuong-tet-cong-ty/)
+- [x] 2026-11-14 – Lịch nghỉ Tết Nguyên đán 2027: người lao động được nghỉ mấy ngày? (/bai-viet/lich-nghi-tet-nguyen-dan-2027/)
 
 ## Tạm hoãn
