@@ -40,5 +40,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-12 – Quy chế thưởng Tết của công ty: cần ghi gì để đúng luật, tránh tranh chấp? (/bai-viet/quy-che-thuong-tet-cong-ty/)
 - [x] 2026-11-14 – Lịch nghỉ Tết Nguyên đán 2027: người lao động được nghỉ mấy ngày? (/bai-viet/lich-nghi-tet-nguyen-dan-2027/)
 - [x] 2026-11-15 – Đi làm ngày Tết được trả lương bao nhiêu? Cách tính 300%, 390% có ví dụ (/bai-viet/di-lam-ngay-tet-duoc-tra-luong-bao-nhieu/)
+- [x] 2026-11-17 – Cách tính thuế TNCN thưởng Tết, lương tháng 13 năm 2026: 3 ví dụ cụ thể (/bai-viet/cach-tinh-thue-tncn-thuong-tet-luong-thang-13/)
 
 ## Tạm hoãn
