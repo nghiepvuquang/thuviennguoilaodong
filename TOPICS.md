@@ -42,5 +42,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-15 – Đi làm ngày Tết được trả lương bao nhiêu? Cách tính 300%, 390% có ví dụ (/bai-viet/di-lam-ngay-tet-duoc-tra-luong-bao-nhieu/)
 - [x] 2026-11-17 – Cách tính thuế TNCN thưởng Tết, lương tháng 13 năm 2026: 3 ví dụ cụ thể (/bai-viet/cach-tinh-thue-tncn-thuong-tet-luong-thang-13/)
 - [x] 2026-11-19 – Nghỉ việc trước hay sau Tết: có mất thưởng Tết, lương tháng 13 không? (/bai-viet/nghi-viec-truoc-hay-sau-tet-co-mat-thuong-tet/)
+- [x] 2026-11-21 – Công ty nợ thưởng Tết, không trả lương tháng 13: người lao động cần làm gì? (/bai-viet/cong-ty-no-thuong-tet-khong-tra-luong-thang-13/)
 
 ## Tạm hoãn
