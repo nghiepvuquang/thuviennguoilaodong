@@ -5,7 +5,6 @@ Chủ đề nào không đủ căn cứ pháp luật chắc chắn thì chuyển
 Người dùng có thể thêm chủ đề mới vào đầu danh sách bất cứ lúc nào.
 
 ## Chờ viết
-- [ ] Trợ cấp hằng tháng cho người đủ tuổi nhưng chưa đủ 15 năm đóng BHXH (Luật BHXH 2024 Điều 23)
 - [ ] BHXH tự nguyện 2026: ai tham gia, mức đóng, mức hỗ trợ
 - [ ] Hỗ trợ học nghề, nâng cao kỹ năng từ quỹ BHTN (Luật Việc làm 2025 Điều 37)
 - [ ] Trợ cấp tai nạn lao động, bệnh nghề nghiệp
@@ -43,5 +42,6 @@ Người dùng có thể thêm chủ đề mới vào đầu danh sách bất c�
 - [x] 2026-11-19 – Nghỉ việc trước hay sau Tết: có mất thưởng Tết, lương tháng 13 không? (/bai-viet/nghi-viec-truoc-hay-sau-tet-co-mat-thuong-tet/)
 - [x] 2026-11-21 – Công ty nợ thưởng Tết, không trả lương tháng 13: người lao động cần làm gì? (/bai-viet/cong-ty-no-thuong-tet-khong-tra-luong-thang-13/)
 - [x] 2026-11-22 – Khám thai, sẩy thai, phá thai được nghỉ mấy ngày? Mức hưởng BHXH 2026 (/bai-viet/kham-thai-say-thai-pha-thai-nghi-bao-nhieu-ngay/)
+- [x] 2026-11-24 – Đủ tuổi nghỉ hưu chưa đủ 15 năm BHXH: trợ cấp hằng tháng tính thế nào? (/bai-viet/tro-cap-hang-thang-chua-du-15-nam-dong-bhxh/)
 
 ## Tạm hoãn
